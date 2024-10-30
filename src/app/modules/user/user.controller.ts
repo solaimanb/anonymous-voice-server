@@ -24,16 +24,30 @@ const createAdmin: RequestHandler = catchAsync(
     });
   }
 );
-const createClient: RequestHandler = catchAsync(
+const createMentor: RequestHandler = catchAsync(
   async (req: Request, res: Response) => {
     const { client, ...userData } = req.body;
     console.log('HITTED IN CREATE USER CONTROLLER' )
-    const result = await UserService.createClient(client, userData);
+    const result = await UserService.createMentor(client, userData);
 
     sendResponse<IUser>(res, {
       statusCode: httpStatus.OK,
       success: true,
-      message: 'Client created successfully!',
+      message: 'Mentor created successfully!',
+      data: result,
+    });
+  }
+);
+const createMentee: RequestHandler = catchAsync(
+  async (req: Request, res: Response) => {
+    const { client, ...userData } = req.body;
+    console.log('HITTED IN CREATE USER CONTROLLER' )
+    const result = await UserService.createMentee(client, userData);
+
+    sendResponse<IUser>(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: 'Mentee created successfully!',
       data: result,
     });
   }
@@ -106,7 +120,8 @@ const imageUpload: RequestHandler = catchAsync(
 
 export const UserController = {
   createAdmin,
-  createClient,
+  createMentor,
+  createMentee,
   getAllUsers,
   updateUserInformation,
   imageUpload

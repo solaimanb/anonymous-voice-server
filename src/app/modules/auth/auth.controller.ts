@@ -16,7 +16,7 @@ const loginUser = catchAsync(async (req: Request, res: Response) => {
     subject: "User Login",
     text: `Hello ${loginData.email} has logged in`,
   }
-  sendEmail(data)
+  // sendEmail(data)
   const result = await AuthService.loginUser(loginData);
   const { refreshToken, ...others } = result;
 

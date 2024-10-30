@@ -1,29 +1,30 @@
 import express from 'express';
 
+import { ENUM_USER_ROLE } from '../../../enums/user';
+import auth from '../../middlewares/auth';
 import { UserController } from './user.controller';
 const path = require('path');
 
 const router = express.Router();
-/**
- * @swagger
- * /:
- *   get:
- *     description: Why you no work?
- *     responses:
- *       200:
- *         description: Returns nothing cause this shit won't work.
- */
+
 router.post(
-  '/create-client',
+  '/create-mentee',
   // validateRequest(UserValidation.createAdminZodSchema),
-  // auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
-  UserController.createClient
+  auth( ENUM_USER_ROLE.MENTEE),
+  UserController.createMentee
+);
+
+router.post(
+  '/create-mentor',
+  // validateRequest(UserValidation.createAdminZodSchema),
+  auth( ENUM_USER_ROLE.MENTOR),
+  UserController.createMentor
 );
 
 router.post(
   '/create-admin',
   // validateRequest(UserValidation.createAdminZodSchema),
-  // auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
+  auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
   UserController.createAdmin
 );
 

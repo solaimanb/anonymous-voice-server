@@ -1,15 +1,16 @@
+import { create } from 'domain';
 import httpStatus from 'http-status';
 import { Secret } from 'jsonwebtoken';
 import mongoose, { SortOrder } from 'mongoose';
 import multer from 'multer';
 
-import config, { NEXT_CLIENT_URL } from '../../../config';
 import ApiError from '../../../errors/ApiError';
 import { jwtHelpers } from '../../../helpers/jwtHelpers';
 import { paginationHelpers } from '../../../helpers/paginationHelper';
 import { IGenericResponse } from '../../../interfaces/common';
 import { IPaginationOptions } from '../../../interfaces/pagination';
 import { sendEmail } from '../../../shared/mailNotification';
+import config, { NEXT_CLIENT_URL } from '../../../config';
 import { UserDetails } from '../userDetails/userDetails.model';
 import { IAdmin, IUser, IUserFilters } from './user.interface';
 import { User } from './user.model';
@@ -64,7 +65,71 @@ const createAdmin = async (
 
   return newUserAllData;
 };
-const createClient = async (
+const createMentor = async (
+  client: IAdmin,
+  user: IUser
+): Promise<IUser | null> => {
+
+  // If password is not given,set default password
+  if (!user.password) {
+    user.password = config.default_admin_pass as string;
+  }
+  // set role
+  user.role = 'client';
+
+  let newUserAllData:any = null;
+  const session = await mongoose.startSession();
+  try {
+    session.startTransaction();
+   
+ 
+    const newClient = await UserDetails.create([client], { session });
+
+    if (!newClient.length) {
+      throw new ApiError(httpStatus.BAD_REQUEST, 'Failed to create faculty ');
+    }
+
+   user.userDetails = newClient[0]._id;
+
+    const newUser = await User.create([user], { session });
+
+    if (!newUser.length) {
+      throw new ApiError(httpStatus.BAD_REQUEST, 'Failed to create admin');
+    }
+    newUserAllData = newUser[0];
+    const token = jwtHelpers.createToken({ userId: user.id, email: user.email }, config.jwt.secret as Secret,config.jwt.expires_in as string);
+    // config.jwt.expires_in as string
+    console.log('token', token);
+    // const data = {
+    //   from: "hello@admaze.ca",
+    //   to: "rfazlay21@gmail.com",
+    //   subject: "Email Verification",
+    //   text: `Please Click the link to verify your email Address
+      
+    //   ${NEXT_CLIENT_URL}/dashbord-token-verification/?token=${token}`,
+    // }
+ 
+    // sendEmail( data);
+
+
+    await session.commitTransaction();
+    await session.endSession();
+  } catch (error) {
+    await session.abortTransaction();
+    await session.endSession();
+    throw error;
+  }
+
+  if (newUserAllData) {
+    newUserAllData = await User.findOne({ id: newUserAllData.id }).populate({
+      path: 'userDetails',
+      
+    });
+  }
+
+  return newUserAllData;
+};
+const createMentee = async (
   client: IAdmin,
   user: IUser
 ): Promise<IUser | null> => {
@@ -251,7 +316,8 @@ return new Promise((resolve,reject)=>{
 export const UserService = {
 
   createAdmin,
-  createClient,
+ createMentor,
+  createMentee,
   getAllUsers,
   updateUserInformation,
   imageUpload
