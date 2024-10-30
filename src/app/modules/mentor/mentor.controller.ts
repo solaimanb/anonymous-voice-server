@@ -1,0 +1,74 @@
+import { Request, Response } from 'express';
+import httpStatus from 'http-status';
+
+import { paginationFields } from '../../../constants/pagination';
+import catchAsync from '../../../shared/catchAsync';
+import pick from '../../../shared/pick';
+import sendResponse from '../../../shared/sendResponse';
+import { mentorFilterableFields } from './mentor.constant';
+import { IMentor } from './mentor.interface';
+import { MentorService } from './mentor.service';
+
+const getSingleMentor = catchAsync(async (req: Request, res: Response) => {
+  const id = req.params.id;
+
+  const result = await MentorService.getSingleMentor(id);
+
+  sendResponse<IMentor>(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Mentor fetched successfully !',
+    data: result,
+  });
+});
+
+const getAllMentors = catchAsync(async (req: Request, res: Response) => {
+  const filters = pick(req.query, mentorFilterableFields);
+  const paginationOptions = pick(req.query, paginationFields);
+
+  const result = await MentorService.getAllMentors(
+    filters,
+    paginationOptions
+  );
+
+  sendResponse<IMentor[]>(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Mentors fetched successfully !',
+    meta: result.meta,
+    data: result.data,
+  });
+});
+
+const updateMentor = catchAsync(async (req: Request, res: Response) => {
+  const id = req.params.id;
+  const updatedData = req.body;
+
+  const result = await MentorService.updateMentor(id, updatedData);
+
+  sendResponse<IMentor>(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Mentor updated successfully !',
+    data: result,
+  });
+});
+const deleteMentor = catchAsync(async (req: Request, res: Response) => {
+  const id = req.params.id;
+
+  const result = await MentorService.deleteMentor(id);
+
+  sendResponse<IMentor>(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Mentor deleted successfully !',
+    data: result,
+  });
+});
+
+export const MentorController = {
+  getSingleMentor,
+  getAllMentors,
+  updateMentor,
+  deleteMentor,
+};
