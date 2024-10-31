@@ -26,9 +26,9 @@ const createAdmin: RequestHandler = catchAsync(
 );
 const createMentor: RequestHandler = catchAsync(
   async (req: Request, res: Response) => {
-    const { client, ...userData } = req.body;
+    const { mentor, ...userData } = req.body;
     console.log('HITTED IN CREATE USER CONTROLLER' )
-    const result = await UserService.createMentor(client, userData);
+    const result = await UserService.createMentor(mentor, userData);
 
     sendResponse<IUser>(res, {
       statusCode: httpStatus.OK,

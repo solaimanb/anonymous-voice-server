@@ -66,7 +66,7 @@ const createAdmin = async (
   return newUserAllData;
 };
 const createMentor = async (
-  client: IAdmin,
+  mentor: IAdmin,
   user: IUser
 ): Promise<IUser | null> => {
 
@@ -75,7 +75,7 @@ const createMentor = async (
     user.password = config.default_admin_pass as string;
   }
   // set role
-  user.role = 'client';
+  user.role = 'mentor';
 
   let newUserAllData:any = null;
   const session = await mongoose.startSession();
@@ -83,18 +83,18 @@ const createMentor = async (
     session.startTransaction();
    
  
-    const newClient = await UserDetails.create([client], { session });
+    const newMentor = await UserDetails.create([mentor], { session });
 
-    if (!newClient.length) {
-      throw new ApiError(httpStatus.BAD_REQUEST, 'Failed to create faculty ');
+    if (!newMentor.length) {
+      throw new ApiError(httpStatus.BAD_REQUEST, 'Failed to create mentor ');
     }
 
-   user.userDetails = newClient[0]._id;
+   user.userDetails = newMentor[0]._id;
 
     const newUser = await User.create([user], { session });
 
     if (!newUser.length) {
-      throw new ApiError(httpStatus.BAD_REQUEST, 'Failed to create admin');
+      throw new ApiError(httpStatus.BAD_REQUEST, 'Failed to create mentor');
     }
     newUserAllData = newUser[0];
     const token = jwtHelpers.createToken({ userId: user.id, email: user.email }, config.jwt.secret as Secret,config.jwt.expires_in as string);

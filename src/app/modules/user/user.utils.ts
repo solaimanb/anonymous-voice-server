@@ -1,5 +1,4 @@
 
-import { ClientOrder } from '../clientOrder/clientOrder.model';
 import { User } from './user.model';
 
 // Student ID

@@ -20,7 +20,7 @@ router.post(
 router.post(
   '/create-mentor',
   // validateRequest(UserValidation.createAdminZodSchema),
-  auth( ENUM_USER_ROLE.MENTOR),
+  // auth( ENUM_USER_ROLE.MENTOR),
   UserController.createMentor
 );
 
