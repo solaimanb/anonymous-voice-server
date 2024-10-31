@@ -12,7 +12,7 @@ import { IPaginationOptions } from '../../../interfaces/pagination';
 import { sendEmail } from '../../../shared/mailNotification';
 import config, { NEXT_CLIENT_URL } from '../../../config';
 import { UserDetails } from '../userDetails/userDetails.model';
-import { IAdmin, IUser, IUserFilters } from './user.interface';
+import { IAdmin, IMentee, IUser, IUserFilters } from './user.interface';
 import { User } from './user.model';
 
 const createAdmin = async (
@@ -130,7 +130,7 @@ const createMentor = async (
   return newUserAllData;
 };
 const createMentee = async (
-  client: IAdmin,
+  mentee: IMentee,
   user: IUser
 ): Promise<IUser | null> => {
 
@@ -139,7 +139,7 @@ const createMentee = async (
     user.password = config.default_admin_pass as string;
   }
   // set role
-  user.role = 'client';
+  user.role = 'mentee';
 
   let newUserAllData:any = null;
   const session = await mongoose.startSession();
@@ -147,33 +147,24 @@ const createMentee = async (
     session.startTransaction();
    
  
-    const newClient = await UserDetails.create([client], { session });
+    const newMentee = await UserDetails.create([mentee], { session });
 
-    if (!newClient.length) {
-      throw new ApiError(httpStatus.BAD_REQUEST, 'Failed to create faculty ');
+    if (!newMentee.length) {
+      throw new ApiError(httpStatus.BAD_REQUEST, 'Failed to create mentee ');
     }
 
-   user.userDetails = newClient[0]._id;
+   user.userDetails = newMentee[0]._id;
 
     const newUser = await User.create([user], { session });
 
     if (!newUser.length) {
-      throw new ApiError(httpStatus.BAD_REQUEST, 'Failed to create admin');
+      throw new ApiError(httpStatus.BAD_REQUEST, 'Failed to create mentee');
     }
     newUserAllData = newUser[0];
     const token = jwtHelpers.createToken({ userId: user.id, email: user.email }, config.jwt.secret as Secret,config.jwt.expires_in as string);
     // config.jwt.expires_in as string
     console.log('token', token);
-    const data = {
-      from: "hello@admaze.ca",
-      to: "rfazlay21@gmail.com",
-      subject: "Email Verification",
-      text: `Please Click the link to verify your email Address
-      
-      ${NEXT_CLIENT_URL}/dashbord-token-verification/?token=${token}`,
-    }
- 
-    sendEmail( data);
+
 
 
     await session.commitTransaction();
@@ -266,59 +257,59 @@ const updateUserInformation = async (
 };
 
 
-const imageUpload = async (req:any,res:any): Promise<any> => {
+// const imageUpload = async (req:any,res:any): Promise<any> => {
 
-return new Promise((resolve,reject)=>{
+// return new Promise((resolve,reject)=>{
 
-  const storage = multer.diskStorage({ 
-    destination:'./uploads/misc',
-    filename: function(req, file, cb) {
-      console.log('file',file)
+//   const storage = multer.diskStorage({ 
+//     destination:'./uploads/misc',
+//     filename: function(req, file, cb) {
+//       console.log('file',file)
     
-      cb(null, file.originalname);
-    }
-  })
+//       cb(null, file.originalname);
+//     }
+//   })
  
-  const upload = multer({ storage: storage }).single('file');
+//   const upload = multer({ storage: storage }).single('file');
 
-     upload(req, res, (err)=> {
-       if (err ){
-        console.log('UPLOAD ERR--->',err);
-        res.json({ uploaded: false, error: 'Upload failed' });
+//      upload(req, res, (err)=> {
+//        if (err ){
+//         console.log('UPLOAD ERR--->',err);
+//         res.json({ uploaded: false, error: 'Upload failed' });
         
-      }
-      else {
-        console.log('else eecuted')
-      //    const newImage = new ImageUpload({
-      //     name: 'image',
-      //     image:{
-      //       data: 'this is file name',
-      //       contentType: 'image/png'
-      //     }
-      // })
+//       }
+//       else {
+//         console.log('else eecuted')
+//       //    const newImage = new ImageUpload({
+//       //     name: 'image',
+//       //     image:{
+//       //       data: 'this is file name',
+//       //       contentType: 'image/png'
+//       //     }
+//       // })
     
-      // newImage.save().then((result:any)=>{  
-      //   console.log(result);
-      // }).catch((err:any)=>{  
-      //   console.log(err);
-      // } );
-       console.log('else eecuted')  };
+//       // newImage.save().then((result:any)=>{  
+//       //   console.log(result);
+//       // }).catch((err:any)=>{  
+//       //   console.log(err);
+//       // } );
+//        console.log('else eecuted')  };
    
-       const fileName = req.file.filename;
-       resolve ({"uploaded": true,
-       "url":`http://localhost:5000/misc/${fileName}`,
-       "fileName":fileName});
+//        const fileName = req.file.filename;
+//        resolve ({"uploaded": true,
+//        "url":`http://localhost:5000/misc/${fileName}`,
+//        "fileName":fileName});
     
-    });
-})
+//     });
+// })
 
-};
+// };
 export const UserService = {
 
   createAdmin,
- createMentor,
+  createMentor,
   createMentee,
   getAllUsers,
   updateUserInformation,
-  imageUpload
+  // imageUpload
 };

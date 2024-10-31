@@ -40,9 +40,9 @@ const createMentor: RequestHandler = catchAsync(
 );
 const createMentee: RequestHandler = catchAsync(
   async (req: Request, res: Response) => {
-    const { client, ...userData } = req.body;
-    console.log('HITTED IN CREATE USER CONTROLLER' )
-    const result = await UserService.createMentee(client, userData);
+    const { mentee, ...userData } = req.body;
+
+    const result = await UserService.createMentee(mentee,userData);
 
     sendResponse<IUser>(res, {
       statusCode: httpStatus.OK,
@@ -103,20 +103,20 @@ const updateUserInformation = catchAsync(
 );
 
 
-const imageUpload: RequestHandler = catchAsync(
-  async (req: Request, res: Response) => {
+// const imageUpload: RequestHandler = catchAsync(
+//   async (req: Request, res: Response) => {
  
-    const result = await UserService.imageUpload(req,res);
+//     const result = await UserService.imageUpload(req,res);
   
 
-    sendResponse<IUser>(res, {
-      statusCode: httpStatus.OK,
-      success: true,
-      message: 'Image Uploaded Successfully!',
-      data: result,
-    });
-  }
-);
+//     sendResponse<IUser>(res, {
+//       statusCode: httpStatus.OK,
+//       success: true,
+//       message: 'Image Uploaded Successfully!',
+//       data: result,
+//     });
+//   }
+// );
 
 export const UserController = {
   createAdmin,
@@ -124,5 +124,5 @@ export const UserController = {
   createMentee,
   getAllUsers,
   updateUserInformation,
-  imageUpload
+  // imageUpload
 };

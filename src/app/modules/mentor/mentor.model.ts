@@ -114,24 +114,7 @@ import { IMentor, MentorModel } from './mentor.interface';
         },
       },
     },
-    // academicFaculty: {
-    //   type: Schema.Types.ObjectId,
-    //   ref: 'AcademicFaculty',
-    //   required: true,
-    // },
-    // academicDepartment: {
-    //   type: Schema.Types.ObjectId,
-    //   ref: 'AcademicDepartment',
-    //   required: true,
-    // },
-    // academicSemester: {
-    //   type: Schema.Types.ObjectId,
-    //   ref: 'AcademicSemester',
-    //   required: true,
-    // },
-    // profileImage: {
-    //   type: String,
-    // },
+
   },
   {
     timestamps: true,

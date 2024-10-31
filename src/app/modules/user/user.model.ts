@@ -91,28 +91,28 @@ UserSchema.pre('save', async function (next) {
 
 export const User = model<IUser, UserModel>('User', UserSchema);
 
-interface IImage {
-  name: string;
-  image: {
-    data:Buffer,
-    contentType:String
-  }
-}
+// interface IImage {
+//   name: string;
+//   image: {
+//     data:Buffer,
+//     contentType:String
+//   }
+// }
 
-const ImageSchema = new Schema<IImage>(
-  {
-    name: {
-      type: String,
-      required: true,
+// const ImageSchema = new Schema<IImage>(
+//   {
+//     name: {
+//       type: String,
+//       required: true,
    
-    },
-    image: {
-      data:Buffer,
-      contentType:String
-    },
-  }
-);
+//     },
+//     image: {
+//       data:Buffer,
+//       contentType:String
+//     },
+//   }
+// );
 
-export const ImageUpload =model<IImage>('ImageModel', ImageSchema);
+// export const ImageUpload =model<IImage>('ImageModel', ImageSchema);
 
 

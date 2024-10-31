@@ -34,6 +34,13 @@ export type IAdmin = {
   designation: string;
 };
 
+export type IMentee = {
+  id: string;
+  userName: string;
+  gender?: 'male' | 'female';
+  age:number;
+};
+
 export type UserModel = {
   isUserExist(
     id: string
