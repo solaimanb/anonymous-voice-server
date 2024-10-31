@@ -16,6 +16,10 @@ const UserSchema = new Schema<IUser, UserModel>(
       type: String,
       required: true,
     },
+    status: {
+      type: String,
+      default: 'offline',
+    },
     email: {
       type: String,
       // unique: true,

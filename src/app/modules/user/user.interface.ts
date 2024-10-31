@@ -6,6 +6,7 @@ import { IUserDetails } from '../userDetails/userDetails.interface';
 export type IUser = {
   id?: string;
   role: string;
+  status?: string;
   password: string;
   needsPasswordChange: boolean;
   passwordChangedAt?: Date;
