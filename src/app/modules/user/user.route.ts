@@ -31,18 +31,18 @@ router.post(
   UserController.createAdmin
 );
 
-router.get(
-  '/get-users',
+// router.get(
+//   '/get-users',
   // validateRequest(UserValidation.createAdminZodSchema),
   // auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
-  UserController.getAllUsers
-);
-router.get(
-  '/get-all-mentors',
+//   UserController.getAllUsers
+// );
+// router.get(
+//   '/get-all-mentors',
   // validateRequest(UserValidation.createAdminZodSchema),
   // auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
-  UserController.getAllUsers
-);
+  // UserController.getAllUsers
+// );
 
 // router.get(
 //   '/:id',

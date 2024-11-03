@@ -3,6 +3,7 @@ import httpStatus from 'http-status';
 import { Secret } from 'jsonwebtoken';
 import mongoose, { SortOrder } from 'mongoose';
 import multer from 'multer';
+import { scheduler } from 'timers/promises';
 
 import ApiError from '../../../errors/ApiError';
 import { jwtHelpers } from '../../../helpers/jwtHelpers';
@@ -11,6 +12,9 @@ import { IGenericResponse } from '../../../interfaces/common';
 import { IPaginationOptions } from '../../../interfaces/pagination';
 import { sendEmail } from '../../../shared/mailNotification';
 import config, { NEXT_CLIENT_URL } from '../../../config';
+import { IMentor } from '../mentor/mentor.interface';
+import { Mentor } from '../mentor/mentor.model';
+import { MentorSchedule } from '../mentor/mentorSchedule.model';
 import { UserDetails } from '../userDetails/userDetails.model';
 import { IAdmin, IMentee, IUser, IUserFilters } from './user.interface';
 import { User } from './user.model';
@@ -66,7 +70,7 @@ const createAdmin = async (
   return newUserAllData;
 };
 const createMentor = async (
-  mentor: IAdmin,
+  mentor: IMentor,
   user: IUser
 ): Promise<IUser | null> => {
 
@@ -81,9 +85,19 @@ const createMentor = async (
   const session = await mongoose.startSession();
   try {
     session.startTransaction();
-   
+   const defaultSchedule:any = {'userName': user.userName, "schedule":[
+                      { time: '1:00 PM - 2:00PM ', isAvailable: false },
+                    { time: '2:00 PM', isAvailable: false },
+                    ]}
  
-    const newMentor = await UserDetails.create([mentor], { session });
+  
+    const newMentorSchedule = await MentorSchedule.create([defaultSchedule], { session });
+    if (!newMentorSchedule.length) {
+      throw new ApiError(httpStatus.BAD_REQUEST, 'Failed to create mentor shedule');
+
+    }
+    mentor.scheduleId = newMentorSchedule[0]._id;
+    const newMentor = await Mentor.create([mentor], { session });
 
     if (!newMentor.length) {
       throw new ApiError(httpStatus.BAD_REQUEST, 'Failed to create mentor ');
@@ -98,18 +112,9 @@ const createMentor = async (
     }
     newUserAllData = newUser[0];
     const token = jwtHelpers.createToken({ userId: user.id, email: user.email }, config.jwt.secret as Secret,config.jwt.expires_in as string);
-    // config.jwt.expires_in as string
+   
     console.log('token', token);
-    // const data = {
-    //   from: "hello@admaze.ca",
-    //   to: "rfazlay21@gmail.com",
-    //   subject: "Email Verification",
-    //   text: `Please Click the link to verify your email Address
-      
-    //   ${NEXT_CLIENT_URL}/dashbord-token-verification/?token=${token}`,
-    // }
- 
-    // sendEmail( data);
+
 
 
     await session.commitTransaction();

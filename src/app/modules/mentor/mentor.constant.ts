@@ -11,10 +11,8 @@ export const mentorSearchableFields = [
 ];
 
 export const mentorFilterableFields = [
-  'searchTerm',
+  'isOnline',
   'id',
-  'bloodGroup',
+  'adminApproval',
   'email',
-  'contactNo',
-  'emergencyContactNo',
 ];

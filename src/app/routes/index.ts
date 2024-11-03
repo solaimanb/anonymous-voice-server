@@ -3,6 +3,7 @@ import express from 'express';
 import { AuthRoutes } from '../modules/auth/auth.route';
 import { BlogRoutes } from '../modules/blog/blog.route';
 import { FileUploadRoutes } from '../modules/fileUpload/fileUPload.route';
+import { MentorRoutes } from '../modules/mentor/mentor.route';
 import { MessagingRoutes } from '../modules/messaging/messaging.route';
 import { UserRoutes } from '../modules/user/user.route';
 import { UserDetailsRoutes } from '../modules/userDetails/userDetails.route';
@@ -14,6 +15,10 @@ const moduleRoutes = [
   {
     path: '/users',
     route: UserRoutes,
+  },
+  {
+    path: '/mentors',
+    route: MentorRoutes,
   },
   {
     path: '/userDetails',
