@@ -24,6 +24,13 @@ router.post(
   UserController.createMentor
 );
 
+
+router.post(
+  '/is-username-duplicate',
+  // validateRequest(UserValidation.createAdminZodSchema),
+  // auth( ENUM_USER_ROLE.MENTOR),
+  UserController.isUsernameDuplicate
+);
 router.post(
   '/create-admin',
   // validateRequest(UserValidation.createAdminZodSchema),

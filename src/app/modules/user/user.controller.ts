@@ -27,8 +27,22 @@ const createAdmin: RequestHandler = catchAsync(
 const createMentor: RequestHandler = catchAsync(
   async (req: Request, res: Response) => {
     const { mentor, ...userData } = req.body;
-    console.log('HITTED IN CREATE USER CONTROLLER' )
+  
     const result = await UserService.createMentor(mentor, userData);
+
+    sendResponse<IUser>(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: 'Mentor created successfully!',
+      data: result,
+    });
+  }
+);
+const isUsernameDuplicateController: RequestHandler = catchAsync(
+  async (req: Request, res: Response) => {
+    const { mentor, ...userData } = req.body;
+  
+    const result = await UserService.isUsernameDuplicate(mentor, userData);
 
     sendResponse<IUser>(res, {
       statusCode: httpStatus.OK,
@@ -124,5 +138,6 @@ export const UserController = {
   createMentee,
   getAllUsers,
   updateUserInformation,
+  isUsernameDuplicateController
   // imageUpload
 };
