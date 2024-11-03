@@ -137,10 +137,18 @@ const createMentor = async (
 
   return newUserAllData;
 };
-const isUsernameDuplicate = async (userName: string): Promise<IUser | null> => {
-  // If password is not given,set default password
-
-  return;
+const isUsernameDuplicate = async (
+  userName: string
+): Promise<boolean | null> => {
+  try {
+    // Check if a user with the given username exists
+    const existingUser = await User.findOne({ userName });
+    console.log(existingUser !== null)
+    return existingUser !== null; // Returns true if a user is found, otherwise false
+  } catch (error) {
+    console.error("Error checking username duplicate:", error);
+    throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, "Database error");
+  }
 };
 const createMentee = async (
   mentee: IMentee,
