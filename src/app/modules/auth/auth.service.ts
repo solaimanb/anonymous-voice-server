@@ -17,18 +17,14 @@ import { User } from "../user/user.model";
 
 const loginUser = async (payload: ILoginUser): Promise<ILoginUserResponse> => {
   const { userName, password } = payload;
-  console.log("id", userName, "password", password);
-  // creating instance of User
-  const user = new User();
-  //  // access to our instance methods
-  // const isUserExist = await user.isUserExist(id);
 
   const isUserExist = await User.isUserExist(userName);
-  // const isUserExist= {id:'220100001',password:'fre8992',needsPasswordChange:false,role: 'student'}
-  console.log("isUserExist", isUserExist);
+
   if (!isUserExist) {
     throw new ApiError(httpStatus.NOT_FOUND, "User does not exist");
   }
+
+  const user = await new User();
 
   if (
     isUserExist.password &&
@@ -40,13 +36,10 @@ const loginUser = async (payload: ILoginUser): Promise<ILoginUserResponse> => {
   //create access token & refresh token
   const { role, needsPasswordChange, userDetails, isVerified } = isUserExist;
 
-  const id = userDetails?._id;
-  const fname = userDetails?.name?.firstName;
-  const lname = userDetails?.name?.lastName;
-  // const isVerified = userDetails?.isVerified;
+  const id = user?._id;
 
   const accessToken = jwtHelpers.createToken(
-    { userName, role, userDetails: id, fname, lname, isVerified },
+    { userName, role, userDetails: id, isVerified },
     config.jwt.secret as Secret,
     config.jwt.expires_in as string
   );
@@ -151,6 +144,7 @@ const refreshToken = async (token: string): Promise<IRefreshTokenResponse> => {
 
   const newAccessToken = jwtHelpers.createToken(
     {
+      //@ts-ignore
       id: isUserExist.id,
       role: isUserExist.role,
     },
