@@ -1,5 +1,3 @@
-import httpStatus from 'http-status';
-import { JwtPayload, Secret } from 'jsonwebtoken';
 import {
   IChangePassword,
   IForgetPassword,
@@ -7,40 +5,42 @@ import {
   ILoginUserResponse,
   IRefreshTokenResponse,
   IUserVerification,
-} from './auth.interface';
+} from "./auth.interface";
+import httpStatus from "http-status";
+import { JwtPayload, Secret } from "jsonwebtoken";
 
-import config, { ADMIN_EMAIL, NEXT_CLIENT_URL } from '../../../config';
-import ApiError from '../../../errors/ApiError';
-import { jwtHelpers } from '../../../helpers/jwtHelpers';
-import { sendEmail } from '../../../shared/mailNotification';
-import { User } from '../user/user.model';
+import ApiError from "../../../errors/ApiError";
+import { jwtHelpers } from "../../../helpers/jwtHelpers";
+import { sendEmail } from "../../../shared/mailNotification";
+import config, { ADMIN_EMAIL, NEXT_CLIENT_URL } from "../../../config";
+import { User } from "../user/user.model";
 
 const loginUser = async (payload: ILoginUser): Promise<ILoginUserResponse> => {
-  const { email, password } = payload;
-  // console.log('id', id, 'password', password);
+  const { userName, password } = payload;
+  console.log("id", userName, "password", password);
   // creating instance of User
   const user = new User();
   //  // access to our instance methods
-    // const isUserExist = await user.isUserExist(id);
+  // const isUserExist = await user.isUserExist(id);
 
-  const isUserExist = await User.isUserExist(email);
+  const isUserExist = await User.isUserExist(userName);
   // const isUserExist= {id:'220100001',password:'fre8992',needsPasswordChange:false,role: 'student'}
-  console.log('isUserExist', isUserExist);
+  console.log("isUserExist", isUserExist);
   if (!isUserExist) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'User does not exist');
+    throw new ApiError(httpStatus.NOT_FOUND, "User does not exist");
   }
 
   if (
     isUserExist.password &&
     !(await User.isPasswordMatched(password, isUserExist.password))
   ) {
-    throw new ApiError(httpStatus.UNAUTHORIZED, 'Password is incorrect');
+    throw new ApiError(httpStatus.UNAUTHORIZED, "Password is incorrect");
   }
 
   //create access token & refresh token
-  const {role, needsPasswordChange,userDetails, isVerified } = isUserExist;
+  const { role, needsPasswordChange, userDetails, isVerified } = isUserExist;
 
-  const id = userDetails?._id ;
+  const id = userDetails?._id;
   const fname = userDetails?.name?.firstName;
   const lname = userDetails?.name?.lastName;
   // const isVerified = userDetails?.isVerified;
@@ -51,7 +51,7 @@ const loginUser = async (payload: ILoginUser): Promise<ILoginUserResponse> => {
     message: { view: true, add: false, edit: false, delete: false },
   };
   const accessToken = jwtHelpers.createToken(
-    { email, role, userDetails:id ,fname,lname,permissions,isVerified},
+    { userName, role, userDetails: id, fname, lname, permissions, isVerified },
     config.jwt.secret as Secret,
     config.jwt.expires_in as string
   );
@@ -69,54 +69,58 @@ const loginUser = async (payload: ILoginUser): Promise<ILoginUserResponse> => {
   };
 };
 const emailVerification = async (payload: IUserVerification): Promise<any> => {
-  const { email,isForgetPassword } = payload;
+  const { email, isForgetPassword } = payload;
   // console.log('id', id, 'password', password);
   // creating instance of User
   const user = new User();
   //  // access to our instance methods
-    // const isUserExist = await user.isUserExist(id);
+  // const isUserExist = await user.isUserExist(id);
 
   const isUserExist = await User.isUserExist(email);
   // const isUserExist= {id:'220100001',password:'fre8992',needsPasswordChange:false,role: 'student'}
   if (isForgetPassword || !!isUserExist) {
     const data = {
-      from :ADMIN_EMAIL,
-      to : email,
-      subject : 'Reset Password',
-      text : `Hi ${email} you have requested to reset your password. Please click on the link below to reset your password. ${NEXT_CLIENT_URL}/reset-password/${email}`,
-    }
-  
+      from: ADMIN_EMAIL,
+      to: email,
+      subject: "Reset Password",
+      text: `Hi ${email} you have requested to reset your password. Please click on the link below to reset your password. ${NEXT_CLIENT_URL}/reset-password/${email}`,
+    };
+
     sendEmail(data);
   }
   return {
-   "isUserExist":isUserExist?true:false
+    isUserExist: isUserExist ? true : false,
   };
 };
 const jwtVerification = async (payload: string): Promise<any> => {
-  const token  = payload;
+  const token = payload;
 
   let verifiedToken = null;
   // const verify = jwt.verify(token, config.jwt.secret as Secret);
   // console.log("verify",verify)
   try {
-    verifiedToken = jwtHelpers.verifyToken(
-      token,
-      config.jwt.secret as Secret
-    );
+    verifiedToken = jwtHelpers.verifyToken(token, config.jwt.secret as Secret);
     if (verifiedToken?.exp > Date.now() / 1000) {
       // Perform email verification logic here
-     await User.findOneAndUpdate({ email: verifiedToken?.email }, {isVerified:true}, {
-        new: true,
-      });
+      await User.findOneAndUpdate(
+        { email: verifiedToken?.email },
+        { isVerified: true },
+        {
+          new: true,
+        }
+      );
     } else {
-      console.log('Token has expired');
+      console.log("Token has expired");
     }
   } catch (err) {
-    throw new ApiError(httpStatus.OK, err?.message==="jwt expired"? "Token Expired" : "Invalid Token");
+    throw new ApiError(
+      httpStatus.OK,
+      err?.message === "jwt expired" ? "Token Expired" : "Invalid Token"
+    );
   }
 
   return {
-   "token":verifiedToken
+    token: verifiedToken,
   };
 };
 
@@ -131,12 +135,12 @@ const refreshToken = async (token: string): Promise<IRefreshTokenResponse> => {
     );
     if (verifiedToken?.exp > Date.now() / 1000) {
       // Perform email verification logic here
-      console.log('Verification successful:', verifiedToken);
+      console.log("Verification successful:", verifiedToken);
     } else {
-      console.log('Token has expired');
+      console.log("Token has expired");
     }
   } catch (err) {
-    throw new ApiError(httpStatus.FORBIDDEN, 'Invalid Refresh Token');
+    throw new ApiError(httpStatus.FORBIDDEN, "Invalid Refresh Token");
   }
 
   const { userId } = verifiedToken;
@@ -146,7 +150,7 @@ const refreshToken = async (token: string): Promise<IRefreshTokenResponse> => {
 
   const isUserExist = await User.isUserExist(userId);
   if (!isUserExist) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'User does not exist');
+    throw new ApiError(httpStatus.NOT_FOUND, "User does not exist");
   }
   //generate new token
 
@@ -175,21 +179,19 @@ const changePassword = async (
 
   //alternative way
   const isUserExist = await User.findOne({ id: user?.email }).select(
-    '+password'
+    "+password"
   );
 
   if (!isUserExist) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'User does not exist');
+    throw new ApiError(httpStatus.NOT_FOUND, "User does not exist");
   }
-
-
 
   // checking old password
   if (
     isUserExist.password &&
     !(await User.isPasswordMatched(oldPassword, isUserExist.password))
   ) {
-    throw new ApiError(httpStatus.UNAUTHORIZED, 'Old Password is incorrect');
+    throw new ApiError(httpStatus.UNAUTHORIZED, "Old Password is incorrect");
   }
 
   // // hash password before saving
@@ -214,25 +216,18 @@ const changePassword = async (
   isUserExist.save();
 };
 
-
-const forgetPassword = async (
-  payload: IForgetPassword
-): Promise<void> => {
+const forgetPassword = async (payload: IForgetPassword): Promise<void> => {
   const { email, newPassword } = payload;
 
   // // checking is user exist
   // const isUserExist = await User.isUserExist(user?.userId);
 
   //alternative way
-  const isUserExist = await User.findOne({ email:email }).select(
-    '+password'
-  );
+  const isUserExist = await User.findOne({ email: email }).select("+password");
 
   if (!isUserExist) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'User does not exist');
+    throw new ApiError(httpStatus.NOT_FOUND, "User does not exist");
   }
-
-
 
   // checking old password
   // if (
@@ -270,5 +265,5 @@ export const AuthService = {
   changePassword,
   forgetPassword,
   emailVerification,
-  jwtVerification
+  jwtVerification,
 };
