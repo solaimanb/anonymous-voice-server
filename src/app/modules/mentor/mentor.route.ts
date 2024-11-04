@@ -1,15 +1,15 @@
-import express from 'express';
+import express from "express";
 
-import { ENUM_USER_ROLE } from '../../../enums/user';
-import auth from '../../middlewares/auth';
-import validateRequest from '../../middlewares/validateRequest';
-import { MentorController } from './mentor.controller';
-import { MentorValidation } from './mentor.validation';
+import { ENUM_USER_ROLE } from "../../../enums/user";
+import auth from "../../middlewares/auth";
+import validateRequest from "../../middlewares/validateRequest";
+import { MentorController } from "./mentor.controller";
+import { MentorValidation } from "./mentor.validation";
 
 const router = express.Router();
 
 router.get(
-  '/:id',
+  "/:id",
   auth(
     ENUM_USER_ROLE.SUPER_ADMIN,
     ENUM_USER_ROLE.ADMIN,
@@ -20,19 +20,19 @@ router.get(
   MentorController.getSingleMentor
 );
 router.delete(
-  '/:id',
+  "/:id",
   auth(ENUM_USER_ROLE.SUPER_ADMIN),
   MentorController.deleteMentor
 );
 
 router.patch(
-  '/:id',
+  "/:id",
   validateRequest(MentorValidation.updateMentorZodSchema),
   auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
   MentorController.updateMentor
 );
 router.get(
-  '/',
+  "/",
   // auth(
   //   ENUM_USER_ROLE.SUPER_ADMIN,
   //   ENUM_USER_ROLE.ADMIN,
@@ -42,5 +42,7 @@ router.get(
   // ),
   MentorController.getAllMentors
 );
+
+router.patch("/", MentorController.updateMentorSchedule);
 
 export const MentorRoutes = router;

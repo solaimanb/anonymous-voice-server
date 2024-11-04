@@ -1,21 +1,21 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import httpStatus from 'http-status';
-import mongoose, { SortOrder } from 'mongoose';
+import httpStatus from "http-status";
+import mongoose, { SortOrder } from "mongoose";
 
-import ApiError from '../../../errors/ApiError';
-import { paginationHelpers } from '../../../helpers/paginationHelper';
-import { IGenericResponse } from '../../../interfaces/common';
-import { IPaginationOptions } from '../../../interfaces/pagination';
-import { User } from '../user/user.model';
-import { mentorSearchableFields } from './mentor.constant';
-import { IMentor, IMentorFilters } from './mentor.interface';
-import { Mentor } from './mentor.model';
+import ApiError from "../../../errors/ApiError";
+import { paginationHelpers } from "../../../helpers/paginationHelper";
+import { IGenericResponse } from "../../../interfaces/common";
+import { IPaginationOptions } from "../../../interfaces/pagination";
+import { User } from "../user/user.model";
+import { mentorSearchableFields } from "./mentor.constant";
+import { IMentor, IMentorFilters, IMentorSchedule } from "./mentor.interface";
+import { Mentor } from "./mentor.model";
+import { MentorSchedule } from "./mentorSchedule.model";
 
 const getAllMentors = async (
   filters: IMentorFilters,
   paginationOptions: IPaginationOptions
 ): Promise<IGenericResponse<IMentor[]>> => {
-
   // Extract searchTerm to implement search query
   const { searchTerm, ...filtersData } = filters;
   const { page, limit, skip, sortBy, sortOrder } =
@@ -24,10 +24,10 @@ const getAllMentors = async (
   // Search needs $or for searching in specified fields
   if (searchTerm) {
     andConditions.push({
-      $or: mentorSearchableFields.map(field => ({
+      $or: mentorSearchableFields.map((field) => ({
         [field]: {
           $regex: searchTerm,
-          $options: 'i',
+          $options: "i",
         },
       })),
     });
@@ -71,9 +71,9 @@ const getAllMentors = async (
 
 const getSingleMentor = async (id: string): Promise<IMentor | null> => {
   const result = await Mentor.findOne({ id })
-    .populate('academicSemester')
-    .populate('academicDepartment')
-    .populate('academicFaculty');
+    .populate("academicSemester")
+    .populate("academicDepartment")
+    .populate("academicFaculty");
   return result;
 };
 
@@ -84,38 +84,56 @@ const updateMentor = async (
   const isExist = await Mentor.findOne({ id });
 
   if (!isExist) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Mentor not found !');
+    throw new ApiError(httpStatus.NOT_FOUND, "Mentor not found !");
   }
 
-  const { name, guardian, localGuardian, ...studentData } = payload;
+  const { name, ...studentData } = payload;
 
   const updatedStudentData: Partial<IMentor> = { ...studentData };
 
   if (name && Object.keys(name).length > 0) {
-    Object.keys(name).forEach(key => {
+    Object.keys(name).forEach((key) => {
       const nameKey = `name.${key}` as keyof Partial<IMentor>; // `name.fisrtName`
       (updatedStudentData as any)[nameKey] = name[key as keyof typeof name];
     });
   }
-  if (guardian && Object.keys(guardian).length > 0) {
-    Object.keys(guardian).forEach(key => {
-      const guardianKey = `guardian.${key}` as keyof Partial<IMentor>; // `guardian.fisrtguardian`
-      (updatedStudentData as any)[guardianKey] =
-        guardian[key as keyof typeof guardian];
-    });
-  }
-  if (localGuardian && Object.keys(localGuardian).length > 0) {
-    Object.keys(localGuardian).forEach(key => {
-      const localGuradianKey =
-        `localGuardian.${key}` as keyof Partial<IMentor>; // `localGuardian.fisrtName`
-      (updatedStudentData as any)[localGuradianKey] =
-        localGuardian[key as keyof typeof localGuardian];
-    });
-  }
+  // if (guardian && Object.keys(guardian).length > 0) {
+  //   Object.keys(guardian).forEach((key) => {
+  //     const guardianKey = `guardian.${key}` as keyof Partial<IMentor>; // `guardian.fisrtguardian`
+  //     (updatedStudentData as any)[guardianKey] =
+  //       guardian[key as keyof typeof guardian];
+  //   });
+  // }
+  // if (localGuardian && Object.keys(localGuardian).length > 0) {
+  //   Object.keys(localGuardian).forEach((key) => {
+  //     const localGuradianKey = `localGuardian.${key}` as keyof Partial<IMentor>; // `localGuardian.fisrtName`
+  //     (updatedStudentData as any)[localGuradianKey] =
+  //       localGuardian[key as keyof typeof localGuardian];
+  //   });
+  // }
 
   const result = await Mentor.findOneAndUpdate({ id }, updatedStudentData, {
     new: true,
   });
+  return result;
+};
+const updateMentorSchedule = async (
+  payload: Partial<IMentorSchedule>
+): Promise<IMentorSchedule | null> => {
+  const { userName } = payload;
+  const isExist = await Mentor.findOne({ userName });
+  if (!isExist) {
+    throw new ApiError(httpStatus.NOT_FOUND, "Mentor not found !");
+  }
+  const { schedule } = payload;
+
+  const result = await MentorSchedule.findOneAndUpdate(
+    { userName },
+    { userName: userName, schedule: schedule },
+    {
+      new: true,
+    }
+  );
   return result;
 };
 
@@ -124,7 +142,7 @@ const deleteMentor = async (id: string): Promise<IMentor | null> => {
   const isExist = await Mentor.findOne({ id });
 
   if (!isExist) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Mentor not found !');
+    throw new ApiError(httpStatus.NOT_FOUND, "Mentor not found !");
   }
 
   const session = await mongoose.startSession();
@@ -134,7 +152,7 @@ const deleteMentor = async (id: string): Promise<IMentor | null> => {
     //delete student first
     const student = await Mentor.findOneAndDelete({ id }, { session });
     if (!student) {
-      throw new ApiError(404, 'Failed to delete student');
+      throw new ApiError(404, "Failed to delete student");
     }
     //delete user
     await User.deleteOne({ id });
@@ -152,6 +170,6 @@ export const MentorService = {
   getAllMentors,
   getSingleMentor,
   updateMentor,
-  deleteMentor
- 
+  updateMentorSchedule,
+  deleteMentor,
 };
