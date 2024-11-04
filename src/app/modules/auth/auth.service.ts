@@ -45,13 +45,8 @@ const loginUser = async (payload: ILoginUser): Promise<ILoginUserResponse> => {
   const lname = userDetails?.name?.lastName;
   // const isVerified = userDetails?.isVerified;
 
-  const permissions: any = {
-    make_order: { view: true, add: true, edit: true, delete: true },
-    invoice: { view: true, add: false, edit: false, delete: false },
-    message: { view: true, add: false, edit: false, delete: false },
-  };
   const accessToken = jwtHelpers.createToken(
-    { userName, role, userDetails: id, fname, lname, permissions, isVerified },
+    { userName, role, userDetails: id, fname, lname, isVerified },
     config.jwt.secret as Secret,
     config.jwt.expires_in as string
   );
