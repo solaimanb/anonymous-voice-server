@@ -26,20 +26,8 @@ const createAppointment = async (payload: IAppointment) => {
 const getSingleAppointment = async (
   id: string
 ): Promise<IAppointment | null> => {
-  if (/^[0-9a-fA-F]{24}$/.test(id)) {
-    // If the parameter is a valid MongoDB ObjectId, use findById
-    return await Appointment.findById(id);
-  } else {
-    // If not, assume it's a slug and use findOne
-    return await Appointment.findOne({ blogSlug: id });
-  }
+  return await Appointment.findById(id);
 };
-// const getSingleBlogBySlug = async (
-//   slug: string
-// ): Promise<IBlog | null> => {
-//   const result = await Blog.findOne({blogSlug:slug});
-//   return result;
-// };
 
 const getAllAppointments = async (
   filters: IAppointmentFilters,
@@ -87,7 +75,6 @@ const getAllAppointments = async (
 
   console.log(whereConditions);
   const result = await Appointment.find(whereConditions)
-    .populate("author")
     .sort(sortConditions)
     .skip(skip)
     .limit(limit);

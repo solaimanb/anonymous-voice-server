@@ -43,6 +43,6 @@ router.get(
   MentorController.getAllMentors
 );
 
-router.patch("/", MentorController.updateMentorSchedule);
+router.patch("/schedule", MentorController.updateMentorSchedule);
 
 export const MentorRoutes = router;
