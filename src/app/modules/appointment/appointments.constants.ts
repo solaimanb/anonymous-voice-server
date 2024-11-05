@@ -1,3 +1,7 @@
-export const blogFilterableFields = ['searchTerm', 'title','blogStatus','blogType'];
+export const appointmentFilterableFields = [
+  "userName",
+  "status",
+  "appointmentType",
+];
 
-export const blogSearchableFields = ['title'];
+export const blogSearchableFields = ["title"];

@@ -5,7 +5,7 @@ import { paginationFields } from "../../../constants/pagination";
 import catchAsync from "../../../shared/catchAsync";
 import pick from "../../../shared/pick";
 import sendResponse from "../../../shared/sendResponse";
-import { blogFilterableFields } from "./appointments.constants";
+import { appointmentFilterableFields } from "./appointments.constants";
 import { IAppointment } from "./appointments.interfaces";
 import { AppointmentService } from "./appointments.service";
 
@@ -15,7 +15,7 @@ const createAppointment = catchAsync(async (req: Request, res: Response) => {
   sendResponse<IAppointment>(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: "New Blog created successfully",
+    message: "Appointment Booked successfully",
     data: result,
   });
 });
@@ -27,13 +27,13 @@ const getSingleAppointment = catchAsync(async (req: Request, res: Response) => {
   sendResponse<IAppointment>(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: "Particular Blog fetched successfully",
+    message: "Appointment fetched successfully",
     data: result,
   });
 });
 
 const getAllAppointments = catchAsync(async (req: Request, res: Response) => {
-  const filters = pick(req.query, blogFilterableFields);
+  const filters = pick(req.query, appointmentFilterableFields);
   const paginationOptions = pick(req.query, paginationFields);
 
   const result = await AppointmentService.getAllAppointments(
