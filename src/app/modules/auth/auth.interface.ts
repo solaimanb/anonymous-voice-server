@@ -1,7 +1,7 @@
-import { ENUM_USER_ROLE } from '../../../enums/user';
+import { ENUM_USER_ROLE } from "../../../enums/user";
 
 export type ILoginUser = {
-  email: string;
+  userName: string;
   password: string;
 };
 export type IUserVerification = {

@@ -1,12 +1,7 @@
-import { Model, Types } from 'mongoose';
+import { Model, Types } from "mongoose";
 
-export type UserName = {
-  firstName: string;
-  lastName: string;
-  middleName: string;
-};
 export interface IMentorSchedule {
-  userName: Types.ObjectId |string; 
+  userName: Types.ObjectId | string;
   schedule: Array<{ time: string; isAvailable: boolean }>;
 }
 
@@ -24,7 +19,10 @@ export type IMentor = {
 };
 
 export type MentorModel = Model<IMentor, Record<string, unknown>>;
-export type MentorScheduleModel = Model<IMentorSchedule, Record<string, unknown>>;
+export type MentorScheduleModel = Model<
+  IMentorSchedule,
+  Record<string, unknown>
+>;
 
 export type IMentorFilters = {
   searchTerm?: string;
