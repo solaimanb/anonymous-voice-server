@@ -24,6 +24,7 @@ const UserSchema = new Schema<IUser, UserModel>(
       type: String,
       required: true,
       unique: true,
+      immutable: true,
     },
     // email: {
     //   type: String,
