@@ -1,23 +1,21 @@
-import { Request, Response } from 'express';
-import httpStatus from 'http-status';
+import { Request, Response } from "express";
+import httpStatus from "http-status";
 
-import { paginationFields } from '../../../constants/pagination';
-import catchAsync from '../../../shared/catchAsync';
-import pick from '../../../shared/pick';
-import sendResponse from '../../../shared/sendResponse';
-import { messagingFilterableFields } from './messaging.constants';
-import { IMessage } from './messaging.interfaces';
-import { MessagingService } from './messaging.service';
+import { paginationFields } from "../../../constants/pagination";
+import catchAsync from "../../../shared/catchAsync";
+import pick from "../../../shared/pick";
+import sendResponse from "../../../shared/sendResponse";
+import { messagingFilterableFields } from "./messaging.constants";
+import { IMessage } from "./messaging.interfaces";
+import { MessagingService } from "./messaging.service";
 
 const createMessage = catchAsync(async (req: Request, res: Response) => {
-  const { ...academicFacultyData } = req.body;
-  const result = await MessagingService.createMessage(
-    academicFacultyData
-  );
+  const { ...messageFacultyData } = req.body;
+  const result = await MessagingService.createMessage(messageFacultyData);
   sendResponse<IMessage>(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Your Message Posted successfully',
+    message: "Your Message Posted successfully",
     data: result,
   });
 });
@@ -29,7 +27,7 @@ const getSingleMessage = catchAsync(async (req: Request, res: Response) => {
   sendResponse<IMessage>(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Your Message fetched successfully',
+    message: "Your Message fetched successfully",
     data: result,
   });
 });
@@ -46,7 +44,7 @@ const getAllMessages = catchAsync(async (req: Request, res: Response) => {
   sendResponse<IMessage[]>(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Your Messages fetched successfully',
+    message: "Your Messages fetched successfully",
     meta: result.meta,
     data: result.data,
   });
@@ -69,15 +67,14 @@ const getAllMessages = catchAsync(async (req: Request, res: Response) => {
 // );
 const updateMessageSeenStatus = catchAsync(
   catchAsync(async (req: Request, res: Response) => {
-    const { id:orderId } = req.params;
-    const userId = req.query.userId;
+    const userName = req.query.userName as string;
 
-    const result = await MessagingService.updateMessageSeenStatus(orderId, userId);
+    const result = await MessagingService.updateMessageSeenStatus(userName);
 
     sendResponse<IMessage>(res, {
       statusCode: httpStatus.OK,
       success: true,
-      message: 'Massage seen successfully',
+      message: "Massage seen successfully",
       data: result,
     });
   })
