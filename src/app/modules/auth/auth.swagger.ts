@@ -7,13 +7,13 @@
  *     LoginInput:
  *       type: object
  *       required:
- *         - email
+ *         - userName
  *         - password
  *       properties:
- *         email:
+ *         userName:
  *           type: string
- *           format: email
- *           description: User's email address
+ *           format: userName
+ *           description: User's userName address
  *         password:
  *           type: string
  *           format: password
