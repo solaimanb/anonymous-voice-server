@@ -2,7 +2,6 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import express, { Application, NextFunction, Request, Response } from "express";
 import httpStatus from "http-status";
-import swaggerJsDoc from "swagger-jsdoc";
 import swaggerJsdoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
 
@@ -21,16 +20,7 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument, specs));
 //parser
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static("uploads")),
-  // app.use('/api/v1/users/', UserRoutes);
-  // app.use('/api/v1/academic-semesters', AcademicSemesterRoutes);
-
-  app.use("/api/v1", routes);
-
-//Testing
-// app.get('/', async (req: Request, res: Response, next: NextFunction) => {
-//   throw new Error('Testing Error logger')
-// })
+app.use(express.static("uploads")), app.use("/api/v1", routes);
 
 //global error handler
 app.use(globalErrorHandler);
