@@ -25,6 +25,7 @@ router.delete(
   MentorController.deleteMentor
 );
 
+router.patch("/schedule", MentorController.updateMentorSchedule);
 router.patch(
   "/:id",
   validateRequest(MentorValidation.updateMentorZodSchema),
@@ -42,7 +43,5 @@ router.get(
   // ),
   MentorController.getAllMentors
 );
-
-router.patch("/schedule", MentorController.updateMentorSchedule);
 
 export const MentorRoutes = router;

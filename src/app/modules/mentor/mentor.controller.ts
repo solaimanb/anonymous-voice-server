@@ -49,8 +49,8 @@ const updateMentor = catchAsync(async (req: Request, res: Response) => {
   });
 });
 const updateMentorSchedule = catchAsync(async (req: Request, res: Response) => {
+  console.log(req.body);
   const updatedData = req.body;
-
   const result = await MentorService.updateMentorSchedule(updatedData);
 
   sendResponse<IMentorSchedule>(res, {
