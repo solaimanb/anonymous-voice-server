@@ -70,7 +70,9 @@ const getAllMentors = async (
 };
 
 const getSingleMentor = async (userName: string): Promise<IMentor | null> => {
-  const result = await Mentor.findOne({ userName: userName });
+  const result = await Mentor.findOne({ userName: userName }).populate(
+    "scheduleId"
+  );
 
   return result;
 };
