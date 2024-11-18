@@ -69,11 +69,9 @@ const getAllMentors = async (
   };
 };
 
-const getSingleMentor = async (id: string): Promise<IMentor | null> => {
-  const result = await Mentor.findOne({ id })
-    .populate("academicSemester")
-    .populate("academicDepartment")
-    .populate("academicFaculty");
+const getSingleMentor = async (userName: string): Promise<IMentor | null> => {
+  const result = await Mentor.findOne({ userName: userName });
+
   return result;
 };
 

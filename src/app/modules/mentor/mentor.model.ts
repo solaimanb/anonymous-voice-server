@@ -1,16 +1,19 @@
-import { Schema, model } from 'mongoose';
+import { Schema, model } from "mongoose";
 
-import { IMentor, MentorModel } from './mentor.interface';
+import { IMentor, MentorModel } from "./mentor.interface";
 
- const MentorSchema = new Schema<IMentor, MentorModel>(
+const MentorSchema = new Schema<IMentor, MentorModel>(
   {
-    name:  {
+    userName: {
+      type: String,
+    },
+    name: {
       type: String,
     },
     bio: {
       type: String,
     },
-      designation: {
+    designation: {
       type: String,
     },
     specialization: {
@@ -26,14 +29,12 @@ import { IMentor, MentorModel } from './mentor.interface';
       type: String,
     },
     profileImage: {
-      type: String, 
+      type: String,
     },
     scheduleId: {
-        type: Schema.Types.ObjectId,
-        ref: 'MentorSchedule',
-    }
-   
-
+      type: Schema.Types.ObjectId,
+      ref: "MentorSchedule",
+    },
   },
   {
     timestamps: true,
@@ -43,4 +44,4 @@ import { IMentor, MentorModel } from './mentor.interface';
   }
 );
 
- export const Mentor = model<IMentor, MentorModel>('Mentor', MentorSchema);
+export const Mentor = model<IMentor, MentorModel>("Mentor", MentorSchema);

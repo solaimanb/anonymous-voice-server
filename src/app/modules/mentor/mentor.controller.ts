@@ -10,9 +10,8 @@ import { IMentor, IMentorSchedule } from "./mentor.interface";
 import { MentorService } from "./mentor.service";
 
 const getSingleMentor = catchAsync(async (req: Request, res: Response) => {
-  const id = req.params.id;
-
-  const result = await MentorService.getSingleMentor(id);
+  const userName = req.params.userName;
+  const result = await MentorService.getSingleMentor(userName);
 
   sendResponse<IMentor>(res, {
     statusCode: httpStatus.OK,

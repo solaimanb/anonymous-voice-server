@@ -8,6 +8,7 @@ export interface IMentorSchedule {
 export type IMentor = {
   id: string;
   name: string; //embedded object
+  userName: string;
   bio: string;
   designation: string;
   specialization: string;

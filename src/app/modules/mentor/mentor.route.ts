@@ -9,14 +9,14 @@ import { MentorValidation } from "./mentor.validation";
 const router = express.Router();
 
 router.get(
-  "/:id",
-  auth(
-    ENUM_USER_ROLE.SUPER_ADMIN,
-    ENUM_USER_ROLE.ADMIN,
-    ENUM_USER_ROLE.FACULTY,
-    ENUM_USER_ROLE.FACULTY,
-    ENUM_USER_ROLE.MENTOR
-  ),
+  "/:userName",
+  // auth(
+  //   ENUM_USER_ROLE.SUPER_ADMIN,
+  //   ENUM_USER_ROLE.ADMIN,
+  //   ENUM_USER_ROLE.FACULTY,
+  //   ENUM_USER_ROLE.FACULTY,
+  //   ENUM_USER_ROLE.MENTOR
+  // ),
   MentorController.getSingleMentor
 );
 router.delete(

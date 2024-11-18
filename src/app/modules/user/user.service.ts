@@ -76,6 +76,7 @@ const createMentor = async (
   }
   // set role
   user.role = "mentor";
+  mentor.userName = user.userName;
 
   let newUserAllData: any = null;
   const session = await mongoose.startSession();
@@ -160,6 +161,7 @@ const createMentee = async (
   }
   // set role
   user.role = "mentee";
+  mentee.userName = user.userName;
 
   let newUserAllData: any = null;
   const session = await mongoose.startSession();
