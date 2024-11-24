@@ -26,12 +26,7 @@ router.delete(
 );
 
 router.patch("/schedule", MentorController.updateMentorSchedule);
-router.patch(
-  "/:id",
-  validateRequest(MentorValidation.updateMentorZodSchema),
-  auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
-  MentorController.updateMentor
-);
+router.patch("/:userName", MentorController.updateMentor);
 router.get(
   "/",
   // auth(

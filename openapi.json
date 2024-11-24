@@ -120,6 +120,32 @@
             }
           }
         }
+      },
+      "patch": {
+        "tags": [
+          "Mentor"
+        ],
+        "summary": "Update Mentor Approval",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "example": {
+                  "adminApproval": true
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
       }
     },
     "/api/v1/mentors/schedule": {

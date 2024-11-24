@@ -78,29 +78,33 @@ const getSingleMentor = async (userName: string): Promise<IMentor | null> => {
 };
 
 const updateMentor = async (
-  id: string,
+  userName: string,
   payload: Partial<IMentor>
 ): Promise<IMentor | null> => {
-  const isExist = await Mentor.findOne({ id });
+  const isExist = await Mentor.findOne({ userName });
 
   if (!isExist) {
     throw new ApiError(httpStatus.NOT_FOUND, "Mentor not found !");
   }
 
-  const { name, ...studentData } = payload;
+  const { name, ...mentorData } = payload;
 
-  const updatedStudentData: Partial<IMentor> = { ...studentData };
+  const updatedMentorData: Partial<IMentor> = { ...mentorData };
 
   if (name && Object.keys(name).length > 0) {
     Object.keys(name).forEach((key) => {
       const nameKey = `name.${key}` as keyof Partial<IMentor>; // `name.fisrtName`
-      (updatedStudentData as any)[nameKey] = name[key as keyof typeof name];
+      (updatedMentorData as any)[nameKey] = name[key as keyof typeof name];
     });
   }
 
-  const result = await Mentor.findOneAndUpdate({ id }, updatedStudentData, {
-    new: true,
-  });
+  const result = await Mentor.findOneAndUpdate(
+    { userName },
+    updatedMentorData,
+    {
+      new: true,
+    }
+  );
   return result;
 };
 const updateMentorSchedule = async (

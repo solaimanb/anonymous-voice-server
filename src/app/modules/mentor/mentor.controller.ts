@@ -36,10 +36,10 @@ const getAllMentors = catchAsync(async (req: Request, res: Response) => {
 });
 
 const updateMentor = catchAsync(async (req: Request, res: Response) => {
-  const id = req.params.id;
+  const userName = req.params.userName;
   const updatedData = req.body;
 
-  const result = await MentorService.updateMentor(id, updatedData);
+  const result = await MentorService.updateMentor(userName, updatedData);
 
   sendResponse<IMentor>(res, {
     statusCode: httpStatus.OK,
