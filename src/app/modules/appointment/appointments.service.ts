@@ -33,7 +33,6 @@ const getAllAppointments = async (
   filters: IAppointmentFilters,
   paginationOptions: IPaginationOptions
 ): Promise<IGenericResponse<IAppointment[]>> => {
-  // Extract searchTerm to implement search query
   const { searchTerm, ...filtersData } = filters;
 
   const { page, limit, skip, sortBy, sortOrder } =
@@ -41,20 +40,8 @@ const getAllAppointments = async (
 
   const andConditions: any = [];
 
-  // Search needs $or for searching in specified fields
-  // if (searchTerm) {
-  //   andConditions.push({
-  //     $or: academicFacultySearchableFields.map(field => ({
-  //       [field]: {
-  //         $regex: searchTerm,
-  //         $options: 'i',
-  //       },
-  //     })),
-  //   });
-  // }
+  console.log("filtersData", filtersData);
 
-  // Filters needs $and to fullfill all the conditions
-  // console.log("filtersData",filtersData)
   if (Object.keys(filtersData).length) {
     andConditions.push({
       $and: Object.entries(filtersData).map(([field, value]) => ({
@@ -73,7 +60,6 @@ const getAllAppointments = async (
   const whereConditions =
     andConditions.length > 0 ? { $and: andConditions } : {};
 
-  console.log(whereConditions);
   const result = await Appointment.find(whereConditions)
     .sort(sortConditions)
     .skip(skip)

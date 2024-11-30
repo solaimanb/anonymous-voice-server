@@ -44,7 +44,7 @@ const getAllAppointments = catchAsync(async (req: Request, res: Response) => {
   sendResponse<IAppointment[]>(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: "All Blogs fetched successfully",
+    message: "All Appointments fetched successfully",
     meta: result.meta,
     data: result.data,
   });

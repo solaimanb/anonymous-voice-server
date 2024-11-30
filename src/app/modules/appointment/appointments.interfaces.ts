@@ -7,6 +7,7 @@ export type IAppointmentSlot = {
 
 export type IAppointment = {
   appointmentType: String;
+  appointmentDate: Date;
   status: String;
   content: String;
   selectedSlot: IAppointmentSlot[];

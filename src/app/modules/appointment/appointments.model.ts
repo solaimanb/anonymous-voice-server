@@ -1,5 +1,6 @@
-import { AppointmentModel, IAppointment } from "./appointments.interfaces";
 import { Schema, model } from "mongoose";
+
+import { AppointmentModel, IAppointment } from "./appointments.interfaces";
 
 const AppointmentSlotSchema = new Schema({
   time: {
@@ -15,6 +16,9 @@ const AppointmentSchema = new Schema<IAppointment, AppointmentModel>(
   {
     appointmentType: {
       type: String,
+    },
+    appointmentDate: {
+      type: Date,
     },
     status: {
       type: String,

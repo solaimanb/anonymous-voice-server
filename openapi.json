@@ -18,6 +18,9 @@
     },
     {
       "name": "Mentee"
+    },
+    {
+      "name": "Appointment"
     }
   ],
   "paths": {
@@ -132,7 +135,7 @@
               "schema": {
                 "type": "object",
                 "example": {
-                  "adminApproval": true
+                  "adminApproval": false
                 }
               }
             }
@@ -209,6 +212,69 @@
             }
           }
         },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/appointments/create-appointment": {
+      "post": {
+        "tags": [
+          "Appointment"
+        ],
+        "summary": "Create Appoinment",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "example": {
+                  "appointmentType": "call",
+                  "status": "confirmed",
+                  "appointmentDate": "2024-12-05T00:00:00Z",
+                  "content": "String",
+                  "selectedSlot": {
+                    "time": "12.00PM-1.00PM",
+                    "isAvailable": true
+                  },
+                  "mentorUserName": "user-3",
+                  "menteeUserName": "String"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/appointments": {
+      "get": {
+        "tags": [
+          "Appointment"
+        ],
+        "summary": "Get Appointmens",
+        "parameters": [
+          {
+            "name": "mentorUserName",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "example": "user-3"
+          }
+        ],
         "responses": {
           "200": {
             "description": "Successful response",
