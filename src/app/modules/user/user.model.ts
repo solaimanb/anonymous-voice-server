@@ -20,11 +20,16 @@ const UserSchema = new Schema<IUser, UserModel>(
       type: String,
       default: 'offline',
     },
-    email: {
+    userName: {
       type: String,
-      // unique: true,
-      // required: true,
+      required: true,
+      unique: true,
     },
+    // email: {
+    //   type: String,
+    //   // unique: true,
+    //   // required: true,
+    // },
     password: {
       type: String,
       required: true,

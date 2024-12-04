@@ -1,25 +1,25 @@
-import { Request, Response } from 'express';
-import { RequestHandler } from 'express-serve-static-core';
-import httpStatus from 'http-status';
+import { Request, Response } from "express";
+import { RequestHandler } from "express-serve-static-core";
+import httpStatus from "http-status";
 
-import { paginationFields } from '../../../constants/pagination';
-import catchAsync from '../../../shared/catchAsync';
-import pick from '../../../shared/pick';
-import sendResponse from '../../../shared/sendResponse';
-import { userFilterableFields } from './user.constant';
-import { IUser } from './user.interface';
-import { UserService } from './user.service';
+import { paginationFields } from "../../../constants/pagination";
+import catchAsync from "../../../shared/catchAsync";
+import pick from "../../../shared/pick";
+import sendResponse from "../../../shared/sendResponse";
+import { userFilterableFields } from "./user.constant";
+import { IUser } from "./user.interface";
+import { UserService } from "./user.service";
 
 const createAdmin: RequestHandler = catchAsync(
   async (req: Request, res: Response) => {
     const { admin, ...userData } = req.body;
-   
+
     const result = await UserService.createAdmin(admin, userData);
 
     sendResponse<IUser>(res, {
       statusCode: httpStatus.OK,
       success: true,
-      message: 'Admin created successfully!',
+      message: "Admin created successfully!",
       data: result,
     });
   }
@@ -27,14 +27,28 @@ const createAdmin: RequestHandler = catchAsync(
 const createMentor: RequestHandler = catchAsync(
   async (req: Request, res: Response) => {
     const { mentor, ...userData } = req.body;
-    console.log('HITTED IN CREATE USER CONTROLLER' )
+
     const result = await UserService.createMentor(mentor, userData);
 
     sendResponse<IUser>(res, {
       statusCode: httpStatus.OK,
       success: true,
-      message: 'Mentor created successfully!',
+      message: "Mentor created successfully!",
       data: result,
+    });
+  }
+);
+const isUsernameDuplicateController: RequestHandler = catchAsync(
+  async (req: Request, res: Response) => {
+    const { userName } = req.body;
+
+    const result = await UserService.isUsernameDuplicate(userName);
+
+    sendResponse<string>(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: result ? "username is already in use" : "username is not in use",
+      data: `${result}`,
     });
   }
 );
@@ -42,12 +56,12 @@ const createMentee: RequestHandler = catchAsync(
   async (req: Request, res: Response) => {
     const { mentee, ...userData } = req.body;
 
-    const result = await UserService.createMentee(mentee,userData);
+    const result = await UserService.createMentee(mentee, userData);
 
     sendResponse<IUser>(res, {
       statusCode: httpStatus.OK,
       success: true,
-      message: 'Mentee created successfully!',
+      message: "Mentee created successfully!",
       data: result,
     });
   }
@@ -66,25 +80,20 @@ const createMentee: RequestHandler = catchAsync(
 //   }
 // );
 
-
 const getAllUsers = catchAsync(async (req: Request, res: Response) => {
   const filters = pick(req.query, userFilterableFields);
   const paginationOptions = pick(req.query, paginationFields);
 
-  const result = await UserService.getAllUsers(
-    filters,
-    paginationOptions
-  );
+  const result = await UserService.getAllUsers(filters, paginationOptions);
 
   sendResponse<IUser[]>(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Clients fetched successfully',
+    message: "Clients fetched successfully",
     meta: result.meta,
     data: result.data,
   });
 });
-
 
 const updateUserInformation = catchAsync(
   catchAsync(async (req: Request, res: Response) => {
@@ -96,18 +105,16 @@ const updateUserInformation = catchAsync(
     sendResponse<IUser>(res, {
       statusCode: httpStatus.OK,
       success: true,
-      message: 'User updated successfully',
+      message: "User updated successfully",
       data: result,
     });
   })
 );
 
-
 // const imageUpload: RequestHandler = catchAsync(
 //   async (req: Request, res: Response) => {
- 
+
 //     const result = await UserService.imageUpload(req,res);
-  
 
 //     sendResponse<IUser>(res, {
 //       statusCode: httpStatus.OK,
@@ -124,5 +131,6 @@ export const UserController = {
   createMentee,
   getAllUsers,
   updateUserInformation,
+  isUsernameDuplicateController,
   // imageUpload
 };

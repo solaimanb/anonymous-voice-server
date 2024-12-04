@@ -15,11 +15,11 @@ const getAllMentors = async (
   filters: IMentorFilters,
   paginationOptions: IPaginationOptions
 ): Promise<IGenericResponse<IMentor[]>> => {
+
   // Extract searchTerm to implement search query
   const { searchTerm, ...filtersData } = filters;
   const { page, limit, skip, sortBy, sortOrder } =
     paginationHelpers.calculatePagination(paginationOptions);
-
   const andConditions = [];
   // Search needs $or for searching in specified fields
   if (searchTerm) {
@@ -50,9 +50,9 @@ const getAllMentors = async (
     andConditions.length > 0 ? { $and: andConditions } : {};
 
   const result = await Mentor.find(whereConditions)
-    .populate('academicSemester')
-    .populate('academicDepartment')
-    .populate('academicFaculty')
+    // .populate('academicSemester')
+    // .populate('academicDepartment')
+    // .populate('academicFaculty')
     .sort(sortConditions)
     .skip(skip)
     .limit(limit);

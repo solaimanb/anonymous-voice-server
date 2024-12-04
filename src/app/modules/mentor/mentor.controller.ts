@@ -25,7 +25,6 @@ const getSingleMentor = catchAsync(async (req: Request, res: Response) => {
 const getAllMentors = catchAsync(async (req: Request, res: Response) => {
   const filters = pick(req.query, mentorFilterableFields);
   const paginationOptions = pick(req.query, paginationFields);
-
   const result = await MentorService.getAllMentors(
     filters,
     paginationOptions

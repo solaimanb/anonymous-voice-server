@@ -1,48 +1,54 @@
-import express from 'express';
+import express from "express";
 
-import { ENUM_USER_ROLE } from '../../../enums/user';
-import auth from '../../middlewares/auth';
-import validateRequest from '../../middlewares/validateRequest';
-import { UserController } from './user.controller';
-import { UserValidation } from './user.validation';
+import { ENUM_USER_ROLE } from "../../../enums/user";
+import auth from "../../middlewares/auth";
+import validateRequest from "../../middlewares/validateRequest";
+import { UserController } from "./user.controller";
+import { UserValidation } from "./user.validation";
 
-import './user.swagger';
-const path = require('path');
+import "./user.swagger";
+const path = require("path");
 
 const router = express.Router();
 router.post(
-  '/create-mentee',
-   validateRequest(UserValidation.createMenteeZodSchema),
+  "/create-mentee",
+  validateRequest(UserValidation.createMenteeZodSchema),
   // auth( ENUM_USER_ROLE.MENTEE),
   UserController.createMentee
 );
 
 router.post(
-  '/create-mentor',
+  "/create-mentor",
   // validateRequest(UserValidation.createAdminZodSchema),
   // auth( ENUM_USER_ROLE.MENTOR),
   UserController.createMentor
 );
 
 router.post(
-  '/create-admin',
+  "/is-username-duplicate",
+  // validateRequest(UserValidation.createAdminZodSchema),
+  // auth( ENUM_USER_ROLE.MENTOR),
+  UserController.isUsernameDuplicateController
+);
+router.post(
+  "/create-admin",
   // validateRequest(UserValidation.createAdminZodSchema),
   auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
   UserController.createAdmin
 );
 
-router.get(
-  '/get-users',
-  // validateRequest(UserValidation.createAdminZodSchema),
-  // auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
-  UserController.getAllUsers
-);
-router.get(
-  '/get-all-mentors',
-  // validateRequest(UserValidation.createAdminZodSchema),
-  // auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
-  UserController.getAllUsers
-);
+// router.get(
+//   '/get-users',
+// validateRequest(UserValidation.createAdminZodSchema),
+// auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
+//   UserController.getAllUsers
+// );
+// router.get(
+//   '/get-all-mentors',
+// validateRequest(UserValidation.createAdminZodSchema),
+// auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
+// UserController.getAllUsers
+// );
 
 // router.get(
 //   '/:id',
@@ -52,7 +58,7 @@ router.get(
 // );
 
 router.patch(
-  '/:id',
+  "/:id",
   // validateRequest(AcademicFacultyValidation.updatefacultyZodSchema),
   // auth(
   //   ENUM_USER_ROLE.SUPER_ADMIN,
@@ -61,7 +67,6 @@ router.patch(
   // ),
   UserController.updateUserInformation
 );
-
 
 // router.post(
 //   '/image-upload',

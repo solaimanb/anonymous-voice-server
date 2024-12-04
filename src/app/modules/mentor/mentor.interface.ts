@@ -5,44 +5,26 @@ export type UserName = {
   lastName: string;
   middleName: string;
 };
-
-export type Guardian = {
-  fatherName: string;
-  fatherOccupation: string;
-  fatherContactNo: string;
-  motherName: string;
-  motherOccupation: string;
-  motherContactNo: string;
-  address: string;
-};
-
-export type LocalGuardian = {
-  name: string;
-  occupation: string;
-  contactNo: string;
-  address: string;
-};
+export interface IMentorSchedule {
+  userName: Types.ObjectId |string; 
+  schedule: Array<{ time: string; isAvailable: boolean }>;
+}
 
 export type IMentor = {
   id: string;
-  name: UserName; //embedded object
-  gender: 'male' | 'female';
-  dateOfBirth: string;
+  name: string; //embedded object
+  bio: string;
+  designation: string;
+  specialization: string;
+  isOnline: boolean;
+  adminApproval: boolean;
   email: string;
-  contactNo: string;
-  emergencyContactNo: string;
-  bloodGroup?: 'A+' | 'A-' | 'B+' | 'B-' | 'AB+' | 'AB-' | 'O+' | 'O-';
-  presentAddress: string;
-  permanentAddress: string;
-  guardian: Guardian; // embedded object
-  localGuardian: LocalGuardian; // embedded object
-  // academicFaculty: Types.ObjectId | IAcademicFaculty; // reference _id
-  // academicDepartment: Types.ObjectId | IAcademicDepartment; // reference _id
-  // academicSemester: Types.ObjectId | IAcademicSemester; // reference _id
-  profileImage?: string;
+  profileImage: string;
+  scheduleId: Types.ObjectId | IMentorSchedule;
 };
 
 export type MentorModel = Model<IMentor, Record<string, unknown>>;
+export type MentorScheduleModel = Model<IMentorSchedule, Record<string, unknown>>;
 
 export type IMentorFilters = {
   searchTerm?: string;
