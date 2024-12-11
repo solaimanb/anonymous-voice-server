@@ -12,12 +12,7 @@ const swaggerDocument = require("../openapi.json");
 
 const app: Application = express();
 
-app.use(
-  cors({
-    origin: "http://localhost:3000",
-    credentials: true,
-  })
-);
+app.use(cors({ origin: "*" }));
 app.use(cookieParser("secret"));
 
 const specs = swaggerJsdoc(swaggerOptions);
