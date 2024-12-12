@@ -12,7 +12,15 @@ const swaggerDocument = require("../openapi.json");
 
 const app: Application = express();
 
-app.use(cors({ origin: "*" }));
+// CORS configuration
+const corsOptions = {
+  origin: ["http://localhost:3000", "https://anonymous-voice.vercel.app", "*"],
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+};
+
+app.use(cors(corsOptions));
 app.use(cookieParser("secret"));
 
 const specs = swaggerJsdoc(swaggerOptions);
