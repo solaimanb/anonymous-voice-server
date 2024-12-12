@@ -66,50 +66,6 @@ const createMentee: RequestHandler = catchAsync(
     });
   }
 );
-// const getAllClients: RequestHandler = catchAsync(
-//   async (req: Request, res: Response) => {
-//     const { client, ...userData } = req.body;
-//     const result = await UserService.createClient(client, userData);
-
-//     sendResponse<IUser>(res, {
-//       statusCode: httpStatus.OK,
-//       success: true,
-//       message: 'Client fetched successfully!',
-//       data: result,
-//     });
-//   }
-// );
-
-const getAllUsers = catchAsync(async (req: Request, res: Response) => {
-  const filters = pick(req.query, userFilterableFields);
-  const paginationOptions = pick(req.query, paginationFields);
-
-  const result = await UserService.getAllUsers(filters, paginationOptions);
-
-  sendResponse<IUser[]>(res, {
-    statusCode: httpStatus.OK,
-    success: true,
-    message: "Clients fetched successfully",
-    meta: result.meta,
-    data: result.data,
-  });
-});
-
-const updateUserInformation = catchAsync(
-  catchAsync(async (req: Request, res: Response) => {
-    const { id } = req.params;
-    const updatedData = req.body;
-
-    const result = await UserService.updateUserInformation(id, updatedData);
-
-    sendResponse<IUser>(res, {
-      statusCode: httpStatus.OK,
-      success: true,
-      message: "User updated successfully",
-      data: result,
-    });
-  })
-);
 
 // const imageUpload: RequestHandler = catchAsync(
 //   async (req: Request, res: Response) => {
@@ -129,8 +85,6 @@ export const UserController = {
   createAdmin,
   createMentor,
   createMentee,
-  getAllUsers,
-  updateUserInformation,
   isUsernameDuplicateController,
   // imageUpload
 };

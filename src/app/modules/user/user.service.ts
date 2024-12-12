@@ -76,6 +76,7 @@ const createMentor = async (
   }
   // set role
   user.role = "mentor";
+  mentor.userName = user.userName;
 
   let newUserAllData: any = null;
   const session = await mongoose.startSession();
@@ -143,7 +144,7 @@ const isUsernameDuplicate = async (
   try {
     // Check if a user with the given username exists
     const existingUser = await User.findOne({ userName });
-    console.log(existingUser !== null)
+    console.log(existingUser !== null);
     return existingUser !== null; // Returns true if a user is found, otherwise false
   } catch (error) {
     console.error("Error checking username duplicate:", error);
@@ -160,6 +161,7 @@ const createMentee = async (
   }
   // set role
   user.role = "mentee";
+  mentee.userName = user.userName;
 
   let newUserAllData: any = null;
   const session = await mongoose.startSession();
@@ -203,77 +205,6 @@ const createMentee = async (
   }
 
   return newUserAllData;
-};
-const getAllUsers = async (
-  filters: IUserFilters,
-  paginationOptions: IPaginationOptions
-): Promise<IGenericResponse<IUser[]>> => {
-  // Extract searchTerm to implement search query
-  const { searchTerm, ...filtersData } = filters;
-
-  const { page, limit, skip, sortBy, sortOrder } =
-    paginationHelpers.calculatePagination(paginationOptions);
-
-  const andConditions: any = [];
-
-  // Search needs $or for searching in specified fields
-  // if (searchTerm) {
-  //   andConditions.push({
-  //     $or: academicFacultySearchableFields.map(field => ({
-  //       [field]: {
-  //         $regex: searchTerm,
-  //         $options: 'i',
-  //       },
-  //     })),
-  //   });
-  // }
-
-  // Filters needs $and to fullfill all the conditions
-  if (Object.keys(filtersData).length) {
-    andConditions.push({
-      $and: Object.entries(filtersData).map(([field, value]) => ({
-        [field]: value,
-      })),
-    });
-  }
-
-  // Dynamic sort needs  fields to  do sorting
-  const sortConditions: { [key: string]: SortOrder } = {};
-  if (sortBy && sortOrder) {
-    sortConditions[sortBy] = sortOrder;
-  }
-
-  // If there is no condition , put {} to give all data
-  const whereConditions =
-    andConditions.length > 0 ? { $and: andConditions } : {};
-
-  console.log(whereConditions);
-  const result = await User.find(whereConditions)
-    .populate("userDetails")
-    .sort(sortConditions)
-    .skip(skip)
-    .limit(limit);
-
-  const total = await User.countDocuments(whereConditions);
-
-  return {
-    meta: {
-      page,
-      limit,
-      total,
-    },
-    data: result,
-  };
-};
-
-const updateUserInformation = async (
-  id: string,
-  payload: Partial<IUser>
-): Promise<IUser | null> => {
-  const result = await User.findOneAndUpdate({ _id: id }, payload, {
-    new: true,
-  });
-  return result;
 };
 
 // const imageUpload = async (req:any,res:any): Promise<any> => {
@@ -327,8 +258,6 @@ export const UserService = {
   createAdmin,
   createMentor,
   createMentee,
-  getAllUsers,
-  updateUserInformation,
   isUsernameDuplicate,
   // imageUpload
 };

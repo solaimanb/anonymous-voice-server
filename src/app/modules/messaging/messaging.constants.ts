@@ -1,3 +1,8 @@
-export const messagingFilterableFields = ['searchTerm', 'title','orderId'];
+export const messagingFilterableFields = [
+  "searchTerm",
+  "title",
+  "sentBy",
+  "sentTo",
+];
 
-export const messagingSearchableFields = ['title'];
+export const messagingSearchableFields = ["title"];
