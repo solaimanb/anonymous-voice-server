@@ -9,6 +9,7 @@ import swaggerUi from "swagger-ui-express";
 import globalErrorHandler from "./app/middlewares/globalErrorHandler";
 import routes from "./app/routes";
 import swaggerOptions from "./config/swagger";
+const swaggerDocument = require("../openapi.json");
 
 const app: Application = express();
 
@@ -39,9 +40,11 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   res.status(httpStatus.NOT_FOUND).json({
     success: false,
     message: "Not Found",
+    message: "Not Found",
     errorMessages: [
       {
         path: req.originalUrl,
+        message: "API Not Found",
         message: "API Not Found",
       },
     ],

@@ -1,8 +1,8 @@
-import { Schema, model } from 'mongoose';
+import { Schema, model } from "mongoose";
 
-import { IMentorSchedule, MentorScheduleModel } from './mentor.interface';
+import { IMentorSchedule, MentorScheduleModel } from "./mentor.interface";
 
- const MentorScheduleSchema = new Schema<IMentorSchedule, MentorScheduleModel>(
+const MentorScheduleSchema = new Schema<IMentorSchedule, MentorScheduleModel>(
   {
     userName: {
       type: String,
@@ -23,13 +23,12 @@ import { IMentorSchedule, MentorScheduleModel } from './mentor.interface';
           },
         },
       ],
-      // default: [
-      //   { time: '1:00 PM - 2:00PM ', isAvailable: false },
-      //   { time: '2:00 PM', isAvailable: false },
-      // ],
     },
-  
-
+    //Schedule object example
+    // schedule: [
+    //   { time: '1:00 PM - 2:00PM ', isAvailable: false },
+    //   { time: '2:00 PM', isAvailable: false },
+    // ],
   },
   {
     timestamps: true,
@@ -39,4 +38,7 @@ import { IMentorSchedule, MentorScheduleModel } from './mentor.interface';
   }
 );
 
- export const MentorSchedule = model<IMentorSchedule, MentorScheduleModel>('MentorSchedule', MentorScheduleSchema);
+export const MentorSchedule = model<IMentorSchedule, MentorScheduleModel>(
+  "MentorSchedule",
+  MentorScheduleSchema
+);
