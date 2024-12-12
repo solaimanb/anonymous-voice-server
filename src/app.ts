@@ -2,6 +2,7 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import express, { Application, NextFunction, Request, Response } from "express";
 import httpStatus from "http-status";
+import swaggerJsDoc from "swagger-jsdoc";
 import swaggerJsdoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
 
@@ -12,23 +13,24 @@ const swaggerDocument = require("../openapi.json");
 
 const app: Application = express();
 
-// CORS configuration
-const corsOptions = {
-  origin: ["http://localhost:3000", "https://anonymous-voice.vercel.app", "*"],
-  credentials: true,
-  methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-};
-
-app.use(cors(corsOptions));
+app.use(cors({ origin: "*" }));
 app.use(cookieParser("secret"));
 
 const specs = swaggerJsdoc(swaggerOptions);
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument, specs));
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 //parser
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static("uploads")), app.use("/api/v1", routes);
+app.use(express.static("uploads")),
+  // app.use('/api/v1/users/', UserRoutes);
+  // app.use('/api/v1/academic-semesters', AcademicSemesterRoutes);
+
+  app.use("/api/v1", routes);
+
+//Testing
+// app.get('/', async (req: Request, res: Response, next: NextFunction) => {
+//   throw new Error('Testing Error logger')
+// })
 
 //global error handler
 app.use(globalErrorHandler);
@@ -38,9 +40,11 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   res.status(httpStatus.NOT_FOUND).json({
     success: false,
     message: "Not Found",
+    message: "Not Found",
     errorMessages: [
       {
         path: req.originalUrl,
+        message: "API Not Found",
         message: "API Not Found",
       },
     ],
