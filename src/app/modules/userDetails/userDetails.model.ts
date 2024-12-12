@@ -7,6 +7,9 @@ const UserDetailsSchema = new Schema<IUserDetails, UserDetailsModel>(
     name: {
       type: String,
     },
+    userName: {
+      type: String,
+    },
     email: {
       type: String,
     },

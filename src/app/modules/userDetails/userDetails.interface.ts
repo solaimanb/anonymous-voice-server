@@ -3,6 +3,7 @@ import { Model } from "mongoose";
 export type IUserDetails = {
   age: number;
   name?: string;
+  userName?: string;
   profileImage?: string;
   dateOfBirth?: string;
   email?: string;
