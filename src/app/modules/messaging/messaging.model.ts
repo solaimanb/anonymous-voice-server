@@ -5,12 +5,12 @@ import { IMessage, MessageModel } from "./messaging.interfaces";
 const MessageSchema = new Schema<IMessage, MessageModel>(
   {
     sentBy: {
-      type: Schema.Types.String,
-      ref: "user",
+      type: String,
+      required: true,
     },
     sentTo: {
-      type: Schema.Types.String,
-      ref: "user",
+      type: String,
+      required: true,
     },
 
     message: {

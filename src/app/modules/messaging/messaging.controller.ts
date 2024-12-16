@@ -50,21 +50,6 @@ const getAllMessages = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-// const updateFaculty = catchAsync(
-//   catchAsync(async (req: Request, res: Response) => {
-//     const { id } = req.params;
-//     const updatedData = req.body;
-
-//     const result = await AcademicFacultyService.updateFaculty(id, updatedData);
-
-//     sendResponse<IAcademicFaculty>(res, {
-//       statusCode: httpStatus.OK,
-//       success: true,
-//       message: 'Academic faculty updated successfully',
-//       data: result,
-//     });
-//   })
-// );
 const updateMessageSeenStatus = catchAsync(
   catchAsync(async (req: Request, res: Response) => {
     const userName = req.query.userName as string;
