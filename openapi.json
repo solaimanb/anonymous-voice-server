@@ -21,6 +21,9 @@
     },
     {
       "name": "Appointment"
+    },
+    {
+      "name": "Messaging"
     }
   ],
   "paths": {
@@ -275,6 +278,79 @@
             "example": "user-3"
           }
         ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/message/create-message": {
+      "post": {
+        "tags": [
+          "Messaging"
+        ],
+        "summary": "Send message",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "example": {
+                  "sentBy": "fazlay",
+                  "sentTo": "fazlay",
+                  "message": "Need to sleep",
+                  "isSeen": false
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/message": {
+      "get": {
+        "tags": [
+          "Messaging"
+        ],
+        "summary": "Get Messages by UserName",
+        "parameters": [
+          {
+            "name": "sentBy",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "example": "fazlay"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/message/67606e75d462d997c217fed6": {
+      "get": {
+        "tags": [
+          "Messaging"
+        ],
+        "summary": "Get Single Message",
         "responses": {
           "200": {
             "description": "Successful response",
