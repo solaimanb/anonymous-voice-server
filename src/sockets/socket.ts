@@ -1,3 +1,4 @@
+// socket.ts
 import { Server as HTTPServer } from "http";
 import { Server as SocketIOServer, Socket } from "socket.io";
 
@@ -5,18 +6,24 @@ import { logger } from "../shared/logger";
 
 let io: SocketIOServer;
 
+interface Room {
+  id: string;
+  users: Map<string, { username: string }>;
+}
+
+const rooms = new Map<string, Room>();
+
 const initializeSocket = (server: HTTPServer) => {
   io = new SocketIOServer(server, {
     cors: {
-      origin: "*", // Adjust this according to your CORS policy
+      origin: "*",
       methods: ["GET", "POST"],
       credentials: true,
     },
   });
 
-  io.use((socket, next) => {
+  io.use((socket: Socket, next) => {
     const username = socket.handshake.auth.username;
-    console.log(" From Use Username:", username);
     socket.username = username;
     next();
   });
@@ -25,71 +32,100 @@ const initializeSocket = (server: HTTPServer) => {
     console.log("User connected:", socket.id);
     logger.info(`Socket connected: ${socket.id}`);
 
-    // Private message event handler
-    socket.on("private message", (data: { to: string; message: any }) => {
-      console.log("Private message:", data);
+    // Create a new room
+    socket.on("create-room", (callback: (roomId: string) => void) => {
+      const roomId = Math.random().toString(36).substring(7);
+      rooms.set(roomId, {
+        id: roomId,
+        users: new Map().set(socket.id, { username: socket.username }),
+      });
 
-      // Find the target socket by username instead of socket ID
-      const targetSocket = Array.from(io.sockets.sockets.values()).find(
-        (s) => s.username === data.to
-      );
+      socket.join(roomId);
+      callback(roomId);
 
-      if (targetSocket) {
-        // Emit the private message to the specific user
-        targetSocket.emit("private message", {
-          from: socket.id,
-          fromUsername: socket.username,
-          message: data.message,
-        });
-
-        // Optional: Send confirmation to the sender
-        socket.emit("message sent", {
-          to: data.to,
-          message: data.message,
-        });
-      } else {
-        // If target socket not found, send an error back to the sender
-        socket.emit("private message error", {
-          to: data.to,
-          message: "User not found",
-        });
-      }
+      logger.info(`Room created: ${roomId} by user: ${socket.username}`);
     });
 
-    // Send connected users list to the client
-    const updateUserList = () => {
-      const users = [];
-      for (let [id, socket] of io.of("/").sockets) {
-        users.push({
-          userID: id,
+    // Join a room
+    socket.on(
+      "join-room",
+      (
+        roomId: string,
+        callback: (success: boolean, message?: string) => void
+      ) => {
+        const room = rooms.get(roomId);
+
+        if (!room) {
+          callback(false, "Room not found");
+          return;
+        }
+
+        socket.join(roomId);
+        room.users.set(socket.id, { username: socket.username });
+
+        // Notify others in the room
+        socket.to(roomId).emit("user-joined", {
+          userId: socket.id,
           username: socket.username,
-          key: id,
         });
+
+        // Send current users in room
+        const users = Array.from(room.users.entries()).map(([id, user]) => ({
+          userId: id,
+          username: user.username,
+        }));
+
+        callback(true);
+        io.to(roomId).emit("room-users", users);
+
+        logger.info(`User ${socket.username} joined room: ${roomId}`);
       }
-      io.emit("users", users);
-      console.log("Connected users:", users);
-    };
+    );
 
-    // Initial user list update
-    updateUserList();
-
-    socket.broadcast.emit("user connected", {
-      userID: socket.id,
-      username: socket.username,
-      key: socket.id,
-      self: false,
+    // Handle voice data
+    socket.on("voice-data", ({ roomId, data }) => {
+      socket.to(roomId).emit("voice-data", {
+        userId: socket.id,
+        username: socket.username,
+        data,
+      });
     });
 
-    socket.on("disconnect", () => {
-      console.log("User disconnected:", socket.id);
-      logger.info(`Socket disconnected: ${socket.id}`);
+    // Leave room
+    socket.on("leave-room", (roomId: string) => {
+      handleUserLeaveRoom(socket, roomId);
+    });
 
-      // Update user list after disconnection
-      updateUserList();
+    // Disconnect handling
+    socket.on("disconnect", () => {
+      rooms.forEach((room, roomId) => {
+        if (room.users.has(socket.id)) {
+          handleUserLeaveRoom(socket, roomId);
+        }
+      });
+
+      logger.info(`Socket disconnected: ${socket.id}`);
     });
   });
 
   return io;
 };
+
+function handleUserLeaveRoom(socket: Socket, roomId: string) {
+  const room = rooms.get(roomId);
+  if (room) {
+    room.users.delete(socket.id);
+    socket.to(roomId).emit("user-left", {
+      userId: socket.id,
+      username: socket.username,
+    });
+
+    if (room.users.size === 0) {
+      rooms.delete(roomId);
+      logger.info(`Room deleted: ${roomId}`);
+    }
+  }
+  socket.leave(roomId);
+}
 
 export { initializeSocket, io };
