@@ -59,7 +59,7 @@ const initializeSocket = (server: HTTPServer) => {
     // Send connected users list to the client
     const updateUserList = () => {
       const users = [];
-      for (let [id, socket] of io.of("/").sockets) {
+      for (const [id, socket] of io.of("/").sockets) {
         users.push({
           userID: id,
           username: socket.username,
