@@ -56,6 +56,71 @@ const initializeSocket = (server: HTTPServer) => {
       }
     });
 
+    socket.onAny((eventName: any) => {
+      console.log(`Socket event: ${eventName}`);
+    });
+
+    socket.on(
+      "call:invite",
+      ({
+        from,
+        to,
+        roomId,
+        type,
+      }: {
+        from: string;
+        to: string;
+        roomId: string;
+        type: string;
+      }) => {
+        console.log(`call:invite`, from, to, roomId, type);
+
+        const targetSocket = Array.from(io.sockets.sockets.values()).find(
+          (s) => s.username === to
+        );
+
+        if (targetSocket) {
+          socket.join(roomId);
+          targetSocket.emit("call:invite", {
+            from,
+            to,
+            roomId,
+            type,
+          });
+        }
+      }
+    );
+
+    socket.on("call:accept", ({ roomId }: { roomId: string }) => {
+      socket.join(roomId);
+      socket.broadcast.to(roomId).emit("call:accept", { roomId });
+    });
+
+    socket.on(
+      "call-offer",
+      ({ offer, roomId }: { offer: any; roomId: string }) => {
+        socket.broadcast.to(roomId).emit("call-offer", { offer, roomId });
+      }
+    );
+
+    socket.on(
+      "call-answer",
+      ({ answer, roomId }: { answer: any; roomId: string }) => {
+        socket.broadcast.to(roomId).emit("call-answer", { answer });
+      }
+    );
+
+    socket.on(
+      "ice-candidate",
+      ({ candidate, roomId }: { candidate: any; roomId: string }) => {
+        socket.broadcast.to(roomId).emit("ice-candidate", { candidate });
+      }
+    );
+
+    socket.on("call:end", ({ roomId }: { roomId: string }) => {
+      socket.to(roomId).emit("call:end", { roomId });
+    });
+
     // Send connected users list to the client
     const updateUserList = () => {
       const users = [];
