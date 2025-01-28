@@ -1,45 +1,38 @@
+import mongoose, { SortOrder } from "mongoose";
 
-import mongoose, { SortOrder } from 'mongoose';
-
-import { paginationHelpers } from '../../../helpers/paginationHelper';
-import { IGenericResponse } from '../../../interfaces/common';
-import { IPaginationOptions } from '../../../interfaces/pagination';
-import { IBlog, IBlogFilters } from './blog.interfaces';
-import { Blog } from './blog.model';
+import { paginationHelpers } from "../../../helpers/paginationHelper";
+import { IGenericResponse } from "../../../interfaces/common";
+import { IPaginationOptions } from "../../../interfaces/pagination";
+import { IBlog, IBlogFilters } from "./blog.interfaces";
+import { Blog } from "./blog.model";
 
 const createBlog = async (payload: IBlog) => {
-
-const session = await mongoose.startSession();
+  const session = await mongoose.startSession();
   try {
     session.startTransaction();
     // const id = await generateOrderId();
-    const id = "123456789"
+    const id = "123456789";
     payload.blogId = id;
     const result = await Blog.create(payload);
-   
+
     await session.commitTransaction();
     await session.endSession();
-    return result
+    return result;
   } catch (error) {
     await session.abortTransaction();
     await session.endSession();
     throw error;
-    
   }
 };
 
-const getSingleBlog = async (
-  id: string
-): Promise<IBlog | null> => {
-
-    if (/^[0-9a-fA-F]{24}$/.test(id)) {
-      // If the parameter is a valid MongoDB ObjectId, use findById
-      return await Blog.findById(id);
-    } else {
-      // If not, assume it's a slug and use findOne
-      return await Blog.findOne({ blogSlug: id });
-    }
- 
+const getSingleBlog = async (id: string): Promise<IBlog | null> => {
+  if (/^[0-9a-fA-F]{24}$/.test(id)) {
+    // If the parameter is a valid MongoDB ObjectId, use findById
+    return await Blog.findById(id);
+  } else {
+    // If not, assume it's a slug and use findOne
+    return await Blog.findOne({ blogSlug: id });
+  }
 };
 // const getSingleBlogBySlug = async (
 //   slug: string
@@ -58,7 +51,7 @@ const getAllBlogs = async (
   const { page, limit, skip, sortBy, sortOrder } =
     paginationHelpers.calculatePagination(paginationOptions);
 
-  const andConditions:any = [];
+  const andConditions: any = [];
 
   // Search needs $or for searching in specified fields
   // if (searchTerm) {
@@ -92,8 +85,8 @@ const getAllBlogs = async (
   const whereConditions =
     andConditions.length > 0 ? { $and: andConditions } : {};
 
-    console.log(whereConditions)
-  const result = await Blog.find(whereConditions).populate('author')
+  console.log(whereConditions);
+  const result = await Blog.find(whereConditions)
     .sort(sortConditions)
     .skip(skip)
     .limit(limit);
@@ -119,9 +112,7 @@ const updateBlog = async (
   return result;
 };
 
-const deleteBlogFromDB = async (
-  id: string
-): Promise<IBlog | null> => {
+const deleteBlogFromDB = async (id: string): Promise<IBlog | null> => {
   const result = await Blog.findByIdAndDelete(id);
   return result;
 };
@@ -131,6 +122,5 @@ export const BlogService = {
   getAllBlogs,
   getSingleBlog,
   updateBlog,
-  deleteBlogFromDB
-
+  deleteBlogFromDB,
 };

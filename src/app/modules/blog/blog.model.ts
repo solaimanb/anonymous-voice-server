@@ -1,46 +1,33 @@
-import { Schema, model } from 'mongoose';
+import { Schema, model } from "mongoose";
 
-import { BlogModel, IBlog } from './blog.interfaces';
+import { BlogModel, IBlog } from "./blog.interfaces";
 
-const BlogSchema = new Schema<
-IBlog,
-  BlogModel
->(
+const BlogSchema = new Schema<IBlog, BlogModel>(
   {
-    blogId:{
+    blogId: {
       type: String,
       required: true,
     },
-    
     blogTitle: {
       type: String,
       required: true,
     },
     featuredImage: {
-      type: String,   
+      type: String,
     },
-    content: {
-      type: String, 
+    description: {
+      type: String,
+    },
 
-    },
-    author: {
-      type: Schema.Types.ObjectId,
-      ref:'UserDetails',
-
-    },
-    blogStatus: {
-      type: String,  
-    },
     blogSlug: {
-      type: String,  
+      type: String,
     },
     blogCategory: {
-      type: String,  
+      type: String,
     },
-    blogType: {
-      type: String,  
+    blogInfo: {
+      type: String,
     },
-
   },
   {
     timestamps: true,
@@ -50,8 +37,4 @@ IBlog,
   }
 );
 
-export const Blog = model<IBlog, BlogModel>(
-  'Blog',
-  BlogSchema
-);
-
+export const Blog = model<IBlog, BlogModel>("Blog", BlogSchema);
