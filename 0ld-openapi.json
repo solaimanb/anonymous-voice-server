@@ -24,9 +24,6 @@
     },
     {
       "name": "Messaging"
-    },
-    {
-      "name": "Blog"
     }
   ],
   "paths": {
@@ -348,117 +345,12 @@
         }
       }
     },
-    "/api/v1/blog-post/67606e75d462d997c217fed6": {
+    "/api/v1/message/67606e75d462d997c217fed6": {
       "get": {
         "tags": [
           "Messaging"
         ],
         "summary": "Get Single Message",
-        "responses": {
-          "200": {
-            "description": "Successful response",
-            "content": {
-              "application/json": {}
-            }
-          }
-        }
-      },
-      "delete": {
-        "tags": [
-          "Blog"
-        ],
-        "summary": "Delete Single blog",
-        "responses": {
-          "200": {
-            "description": "Successful response",
-            "content": {
-              "application/json": {}
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/blog-post/create-blog": {
-      "post": {
-        "tags": [
-          "Blog"
-        ],
-        "summary": "Create New Blog",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "example": {
-                  "blogId": "blog123",
-                  "blogTitle": "Getting Started with Node.js Development",
-                  "featuredImage": "https://example.com/images/nodejs-banner.jpg",
-                  "content": "Node.js is a powerful runtime environment that allows developers to build scalable applications. In this blog post, we'll explore the fundamentals of Node.js development and best practices for building robust applications.",
-                  "blogStatus": "published",
-                  "blogSlug": "getting-started-with-nodejs-development",
-                  "blogCategory": "Programming",
-                  "blogType": "tutorial"
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful response",
-            "content": {
-              "application/json": {}
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/blog-post/": {
-      "patch": {
-        "tags": [
-          "Blog"
-        ],
-        "summary": "Update Blog",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "example": {
-                  "sentBy": "fazlay",
-                  "sentTo": "fazlay",
-                  "message": "Need to sleep",
-                  "isSeen": false
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful response",
-            "content": {
-              "application/json": {}
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/blog-post": {
-      "get": {
-        "tags": [
-          "Blog"
-        ],
-        "summary": "Get Single Blog",
-        "parameters": [
-          {
-            "name": "123456789",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
         "responses": {
           "200": {
             "description": "Successful response",
