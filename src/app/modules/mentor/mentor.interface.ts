@@ -8,6 +8,7 @@ export interface IMentorSchedule {
 export type IMentor = {
   id: string;
   name: string; //embedded object
+  gender: "male" | "female";
   userName: string;
   bio: string;
   designation: string;
