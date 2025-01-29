@@ -13,6 +13,9 @@ const MentorSchema = new Schema<IMentor, MentorModel>(
     bio: {
       type: String,
     },
+    gender: {
+      type: String,
+    },
     designation: {
       type: String,
     },
@@ -21,6 +24,7 @@ const MentorSchema = new Schema<IMentor, MentorModel>(
     },
     isOnline: {
       type: Boolean,
+      default: false,
     },
     adminApproval: {
       type: Boolean,
