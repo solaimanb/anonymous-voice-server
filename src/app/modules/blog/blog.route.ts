@@ -1,50 +1,25 @@
-import express from 'express';
+import express from "express";
 
-import { BlogController } from './blog.controller';
+import { BlogController } from "./blog.controller";
 
 const router = express.Router();
 
-router.post(
-  '/create-blog',
-  // validateRequest(ClientOrderValidation.createOrderZodSchema),
-  // auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
-  BlogController.createBlog
-);
+router.post("/create-blog", BlogController.createBlog);
 
 router.get(
-  '/:id',
-  // auth(
-  //   ENUM_USER_ROLE.SUPER_ADMIN,
-  //   ENUM_USER_ROLE.ADMIN,
-  //   ENUM_USER_ROLE.FACULTY
-  // ),
+  "/:id",
+
   BlogController.getSingleBlog
 );
 
 router.get(
-  '/',
-  // auth(
-  //   ENUM_USER_ROLE.SUPER_ADMIN,
-  //   ENUM_USER_ROLE.ADMIN,
-  //   ENUM_USER_ROLE.FACULTY
-  // ),
-  BlogController.getAllBlogs)
+  "/",
 
-router.patch(
-  '/:id',
-  // validateRequest(AcademicFacultyValidation.updatefacultyZodSchema),
-  // auth(
-  //   ENUM_USER_ROLE.SUPER_ADMIN,
-  //   ENUM_USER_ROLE.ADMIN,
-  //   ENUM_USER_ROLE.FACULTY
-  // ),
-  BlogController.updateBlog
+  BlogController.getAllBlogs
 );
 
-router.delete(
-  '/:id',
-  // auth(ENUM_USER_ROLE.SUPER_ADMIN),
-  BlogController.deleteBlog
-);
+router.patch("/:id", BlogController.updateBlog);
+
+router.delete("/:id", BlogController.deleteBlog);
 
 export const BlogRoutes = router;
