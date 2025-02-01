@@ -12,10 +12,9 @@ const MentorScheduleSchema = new Schema<IMentorSchedule, MentorScheduleModel>(
     schedule: {
       type: [
         {
-          time: {
-            type: String,
-            required: true,
-          },
+          day: String,
+          startTime: { hours: Number, minutes: Number },
+          endTime: { hours: Number, minutes: Number },
           isAvailable: {
             type: Boolean,
             required: true,
@@ -24,11 +23,6 @@ const MentorScheduleSchema = new Schema<IMentorSchedule, MentorScheduleModel>(
         },
       ],
     },
-    //Schedule object example
-    // schedule: [
-    //   { time: '1:00 PM - 2:00PM ', isAvailable: false },
-    //   { time: '2:00 PM', isAvailable: false },
-    // ],
   },
   {
     timestamps: true,
