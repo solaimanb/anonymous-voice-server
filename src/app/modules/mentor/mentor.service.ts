@@ -52,7 +52,7 @@ const getAllMentors = async (
   const result = await Mentor.find(whereConditions)
     // .populate('academicSemester')
     // .populate('academicDepartment')
-    // .populate('academicFaculty')
+    .populate("scheduleId")
     .sort(sortConditions)
     .skip(skip)
     .limit(limit);
@@ -73,6 +73,10 @@ const getSingleMentor = async (userName: string): Promise<IMentor | null> => {
   const result = await Mentor.findOne({ userName: userName }).populate(
     "scheduleId"
   );
+
+  if (!result) {
+    throw new ApiError(httpStatus.NOT_FOUND, "Mentor not found !");
+  }
 
   return result;
 };

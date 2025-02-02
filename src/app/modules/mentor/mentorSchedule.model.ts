@@ -12,9 +12,19 @@ const MentorScheduleSchema = new Schema<IMentorSchedule, MentorScheduleModel>(
     schedule: {
       type: [
         {
-          day: String,
-          startTime: { hours: Number, minutes: Number },
-          endTime: { hours: Number, minutes: Number },
+          day: { type: String, required: true },
+          startTime: {
+            type: {
+              hours: { type: Number, required: true },
+              minutes: { type: Number, required: true },
+            },
+          },
+          endTime: {
+            type: {
+              hours: { type: Number, required: true },
+              minutes: { type: Number, required: true },
+            },
+          },
           isAvailable: {
             type: Boolean,
             required: true,

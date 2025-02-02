@@ -15,6 +15,7 @@ export type IMentor = {
   specialization: string;
   isOnline: boolean;
   adminApproval: boolean;
+  availability: Array<{ time: string; isAvailable: boolean }>;
   email: string;
   profileImage: string;
   scheduleId: Types.ObjectId | IMentorSchedule;

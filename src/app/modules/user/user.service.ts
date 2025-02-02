@@ -80,14 +80,14 @@ const createMentor = async (
 
   let newUserAllData: any = null;
   const session = await mongoose.startSession();
+
   try {
     session.startTransaction();
+
     const defaultSchedule: any = {
       userName: user.userName,
-      schedule: [
-        { time: "1:00 PM - 2:00PM ", isAvailable: false },
-        { time: "2:00 PM", isAvailable: false },
-      ],
+
+      schedule: mentor.availability,
     };
 
     const newMentorSchedule = await MentorSchedule.create([defaultSchedule], {
