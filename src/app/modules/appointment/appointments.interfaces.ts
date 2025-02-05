@@ -13,6 +13,7 @@ export type IAppointment = {
   selectedSlot: IAppointmentSlot[];
   mentorUserName: String;
   menteeUserName: String;
+  durationMinutes: Number;
 };
 
 export type AppointmentModel = Model<IAppointment, Record<string, unknown>>;

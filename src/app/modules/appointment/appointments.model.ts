@@ -23,6 +23,9 @@ const AppointmentSchema = new Schema<IAppointment, AppointmentModel>(
     status: {
       type: String,
     },
+    durationMinutes: {
+      type: Number,
+    },
 
     selectedSlot: {
       type: [AppointmentSlotSchema],
