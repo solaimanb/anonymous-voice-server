@@ -1,20 +1,23 @@
-import { Schema, model } from 'mongoose';
+import { Schema, model } from "mongoose";
 
-import { CategoriesModel, ICategories } from './categories.interfaces';
+import { CategoriesModel, ICategories } from "./categories.interfaces";
 
-const CategoriesSchema = new Schema<
-ICategories,
-  CategoriesModel
->(
+const CategoriesSchema = new Schema<ICategories, CategoriesModel>(
   {
-    id:{
+    interestedUsers: {
       type: String,
       required: true,
+      default: 0,
     },
-    
-    name: {
+    respondedUsers: {
       type: String,
       required: true,
+      default: 0,
+    },
+    serviceNeedsTo: {
+      type: String,
+      required: true,
+      default: 0,
     },
   },
   {
@@ -26,7 +29,6 @@ ICategories,
 );
 
 export const Categories = model<ICategories, CategoriesModel>(
-  'Categories',
+  "Categories",
   CategoriesSchema
 );
-

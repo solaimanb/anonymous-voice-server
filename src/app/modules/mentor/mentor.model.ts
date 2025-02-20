@@ -13,6 +13,9 @@ const MentorSchema = new Schema<IMentor, MentorModel>(
     bio: {
       type: String,
     },
+    phone: {
+      type: String,
+    },
     gender: {
       type: String,
     },
