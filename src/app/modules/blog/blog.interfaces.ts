@@ -9,6 +9,7 @@ export type IBlog = {
   blogInfo: String;
   blogCategory: String;
   blogSlug: String;
+  blogType: String;
 };
 
 export type BlogModel = Model<IBlog, Record<string, unknown>>;

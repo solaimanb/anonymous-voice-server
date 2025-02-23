@@ -28,6 +28,9 @@ const BlogSchema = new Schema<IBlog, BlogModel>(
     blogInfo: {
       type: String,
     },
+    blogType: {
+      type: String,
+    },
   },
   {
     timestamps: true,

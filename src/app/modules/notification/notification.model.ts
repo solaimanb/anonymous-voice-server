@@ -1,39 +1,27 @@
-import { Schema, model } from 'mongoose';
+import { Schema, model } from "mongoose";
 
-import { INotification, NotificationModel } from './notification.interfaces';
+import { INotification, NotificationModel } from "./notification.interfaces";
 
-const NotificationSchema = new Schema<
-  INotification,
-  NotificationModel
->(
+const NotificationSchema = new Schema<INotification, NotificationModel>(
   {
+    createdBy: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+    },
+    receiver: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+    },
 
-    createdBy:{
-      type: Schema.Types.ObjectId,
-      ref:'UserDetails',
-    },
-    receiver:{
-      type: Schema.Types.ObjectId,
-      ref:'UserDetails',
-    },
-    
     type: {
       type: String,
-  
-     
     },
     content: {
       type: String,
       required: true,
-     
     },
     isSeen: {
       type: Boolean,
-      
-    },
-    adminAcknowledgement: {
-      type: Boolean,
-      
     },
   },
   {
@@ -45,6 +33,6 @@ const NotificationSchema = new Schema<
 );
 
 export const Notification = model<INotification, NotificationModel>(
-  'Notification',
+  "Notification",
   NotificationSchema
 );
