@@ -1,20 +1,15 @@
-import express from 'express';
+import express from "express";
 
-import { ENUM_USER_ROLE } from '../../../enums/user';
-import auth from '../../middlewares/auth';
-import { NotificationController } from './notification.controller';
+import { ENUM_USER_ROLE } from "../../../enums/user";
+import auth from "../../middlewares/auth";
+import { NotificationController } from "./notification.controller";
 
 const router = express.Router();
 
-router.post(
-  '/create-notification',
-  // validateRequest(AcademicFacultyValidation.createFacultyZodSchema),
-  // auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
-  NotificationController.createNotification
-);
+router.post("/create-notification", NotificationController.createNotification);
 
 router.get(
-  '/:id',
+  "/:id",
   auth(
     ENUM_USER_ROLE.SUPER_ADMIN,
     ENUM_USER_ROLE.ADMIN,
@@ -23,33 +18,8 @@ router.get(
   NotificationController.getSingleNotification
 );
 
-router.get(
-  '/',
-  // auth(
-  //   ENUM_USER_ROLE.SUPER_ADMIN,
-  //   ENUM_USER_ROLE.ADMIN,
-  //   ENUM_USER_ROLE.FACULTY
-  // ),
-  NotificationController.getAllNotification
-);
+router.get("/", NotificationController.getAllNotification);
 
-router.patch(
-  '/:id',
-  // validateRequest(AcademicFacultyValidation.updatefacultyZodSchema),
-  // auth(
-  //   ENUM_USER_ROLE.SUPER_ADMIN,
-  //   ENUM_USER_ROLE.ADMIN,
-  //   ENUM_USER_ROLE.FACULTY
-  // ),
-  NotificationController.updateNotificationSeenStatus
-);
-
-;
-
-// router.delete(
-//   '/:id',
-//   auth(ENUM_USER_ROLE.SUPER_ADMIN),
-//   AcademicFacultyController.deleteFaculty
-// );
+router.patch("/:id", NotificationController.updateNotificationSeenStatus);
 
 export const NotificationRoutes = router;

@@ -7,6 +7,7 @@ import { CategoriesRoutes } from "../modules/category/categories.route";
 import { FileUploadRoutes } from "../modules/fileUpload/fileUPload.route";
 import { MentorRoutes } from "../modules/mentor/mentor.route";
 import { MessagingRoutes } from "../modules/messaging/messaging.route";
+import { NotificationRoutes } from "../modules/notification/notification.route";
 import { UserRoutes } from "../modules/user/user.route";
 import { UserDetailsRoutes } from "../modules/userDetails/userDetails.route";
 
@@ -49,6 +50,10 @@ const moduleRoutes = [
   {
     path: "/file-upload",
     route: FileUploadRoutes,
+  },
+  {
+    path: "/notifications",
+    route: NotificationRoutes,
   },
 ];
 
