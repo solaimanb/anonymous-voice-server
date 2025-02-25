@@ -5,6 +5,7 @@ export type IBlog = {
   blogTitle: String;
   featuredImage: String;
   content: String;
+  excerpt: String;
   author: String;
   blogInfo: String;
   blogCategory: String;

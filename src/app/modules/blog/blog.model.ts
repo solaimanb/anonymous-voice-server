@@ -21,7 +21,9 @@ const BlogSchema = new Schema<IBlog, BlogModel>(
     content: {
       type: String,
     },
-
+    excerpt: {
+      type: String,
+    },
     blogSlug: {
       type: String,
     },
