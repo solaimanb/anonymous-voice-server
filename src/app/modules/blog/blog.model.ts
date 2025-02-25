@@ -12,6 +12,9 @@ const BlogSchema = new Schema<IBlog, BlogModel>(
       type: String,
       required: true,
     },
+    author: {
+      type: String,
+    },
     featuredImage: {
       type: String,
     },
