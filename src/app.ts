@@ -19,13 +19,12 @@ const corsOptions = {
     "https://www.anonymousvoicesav.com",
     "http://localhost:3000",
     "https://anonymous-voice.vercel.app",
-    "*",
   ],
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
   allowedHeaders: ["Content-Type", "Authorization"],
 };
-
+app.options("*", cors(corsOptions));
 app.use(cors(corsOptions));
 app.use(cookieParser("secret"));
 
