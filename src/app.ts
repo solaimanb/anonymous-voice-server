@@ -14,7 +14,13 @@ const app: Application = express();
 
 // CORS configuration
 const corsOptions = {
-  origin: ["http://localhost:3000", "https://anonymous-voice.vercel.app", "*"],
+  origin: [
+    "http://localhost:3000",
+    "https://anonymous-voice.vercel.app",
+    "*",
+    "https://anonymousvoicesav.com",
+    "https://www.anonymousvoicesav.com",
+  ],
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
   allowedHeaders: ["Content-Type", "Authorization"],
